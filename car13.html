@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>0524浴佛13車義工報到</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111122;
+      --gold: #aa7a00;
+      --gold-light: #d4a017;
+      --gold-pale: #fbf7ee;
+      --gold-border: #dfbe40;
+      --maroon: #801818;
+      --cream: #f7f4ed;
+      --gray: #333333;
+      --gray-light: #e2e2e2;
+      --white: #ffffff;
+      --green: #0f522e;
+      --green-pale: #eaf5ed;
+      --green-border: #a3d9b9;
+      --red: #b21822;
+      --red-pale: #fff2f2;
+      --red-border: #ffccd0;
+      --amber: #b85c00;
+      --teal: #1e4238;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 18px; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--cream); color: var(--ink);
+      min-height: 100vh; max-width: 480px; margin: 0 auto;
+      box-shadow: 0 0 40px rgba(0,0,0,0.12); line-height: 1.6;
+    }
+
+    #loading-bar {
+      display: none; position: fixed; top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));
+      background-size: 200% 100%; animation: shimmer 1.2s infinite; z-index: 9999;
+    }
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ── 置頂 ── */
+    #sticky-top { position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    header {
+      background: #fdf8f0; padding: 12px 60px 12px 14px; text-align: center;
+      border-bottom: 2px solid #e8d9c0; position: relative;
+    }
+    header h1 {
+      font-family: 'Noto Serif TC',serif; font-size: 1.33rem; font-weight: 900;
+      letter-spacing: .04em; color: var(--maroon);
+    }
+
+    /* ── 齒輪按鈕（古典金銅圓鈕） ── */
+    #leader-gear {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg,#fffbf3,#f3e5cc);
+      border: 1.5px solid var(--gold-border);
+      font-size: 1.2rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      box-shadow: 0 2px 5px rgba(184,134,11,0.15);
+      -webkit-tap-highlight-color: transparent; z-index: 101;
+      transition: all 0.2s;
+    }
+    #leader-gear:active { transform: translateY(-50%) scale(0.9); background: #f3e5cc; }
+
+    /* ── 統計 ── */
+    #top-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      background: #faf7f2; padding: 10px; gap: 8px;
+      border-bottom: 2px solid #e8d9c0;
+    }
+    .top-stat-box {
+      background: #fff; border-radius: 12px; padding: 8px 4px;
+      text-align: center; border: 2px solid #ede0cc;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .top-stat-box .num {
+      font-size: 1.6rem; font-weight: 900;
+      font-family: 'Noto Serif TC',serif; line-height: 1;
+    }
+    .top-stat-box .lbl { font-size: .85rem; color: #5a4020; margin-top: 4px; font-weight: 700; }
+    .num-green { color: var(--green); }
+    .num-red   { color: var(--red); }
+    .num-gray  { color: #5a4020; }
+
+    /* ── 主體 ── */
+    #main-body { padding: 14px 14px 60px; }
+
+    #self-disabled-note {
+      display: none; background: var(--red-pale); border: 2px solid var(--red-border);
+      border-radius: 12px; padding: 12px; font-size: .95rem; font-weight: 700;
+      color: var(--red); text-align: center; margin-bottom: 14px;
+    }
+    #readonly-bar {
+      display: none; background: linear-gradient(135deg,#fff8e1,#fffde7);
+      border: 2px solid var(--gold-border); border-radius: 12px;
+      padding: 12px; text-align: center; font-size: .95rem;
+      color: #78350f; font-weight: 700; margin-bottom: 14px;
+    }
+
+    /* ── 快速跳轉 ── */
+    .jump-bar { margin-bottom: 16px; position: relative; }
+    .jump-select {
+      width: 100%; padding: 14px 36px 14px 40px;
+      border: 2px solid #b8a080; border-radius: 12px;
+      background: #fff; font-family: 'Noto Sans TC',sans-serif;
+      font-size: 1.05rem; color: var(--ink); appearance: none;
+      -webkit-appearance: none; cursor: pointer; outline: none; font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .jump-select:focus { border-color: var(--gold); }
+    .jump-icon  { position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; color: #887050; pointer-events: none; }
+    .jump-arrow { position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; color: var(--gray); pointer-events: none; }
+
+    /* ── 篩選列 ── */
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .section-header h2 { font-family: 'Noto Serif TC',serif; font-size: 1.2rem; font-weight: 900; color: var(--maroon); }
+    .filter-bar { display: flex; gap: 6px; }
+    .filter-btn {
+      padding: 10px 14px; font-size: .92rem; border-radius: 10px;
+      border: 2px solid #b8a080; background: var(--white); color: var(--ink);
+      font-family: 'Noto Sans TC',sans-serif; font-weight: 700;
+      cursor: pointer; -webkit-tap-highlight-color: transparent; white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .filter-btn.active { border-color: var(--maroon); background: #fff5f5; color: var(--maroon);
+      box-shadow: 0 2px 6px rgba(128,24,24,0.15); }
+
+    /* ── 主頁名單卡片 ── */
+    .cards-grid { display: flex; flex-direction: column; gap: 10px; }
+    .card {
+      background: #fdf9f3; border-radius: 16px; padding: 14px 16px;
+      box-shadow: 0 4px 12px rgba(90,64,32,0.06); border: 2px solid #ede0cc;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s ease; display: flex; flex-direction: column; gap: 8px;
+    }
+    .card:active { transform: scale(0.98); box-shadow: 0 2px 6px rgba(0,0,0,.05); opacity: .9; }
+    .card.frozen { cursor: default; }
+    .card.present { border-color: var(--green); border-width: 3px; background: linear-gradient(135deg,#c8ecd6,#dff5e8); }
+    .card.frozen  { border-color: var(--red); border-width: 2px; background: #fff5f5; opacity: .78; }
+    /* 前3張：核心領隊金框 */
+    .card.core-leader { border: 2px solid var(--gold-border); background: linear-gradient(135deg,#fefbf3,#fdf7e8); }
+    .card.core-leader.present { border-color: var(--green); border-width: 3px; background: linear-gradient(135deg,#c8ecd6,#dff5e8); }
+
+    .card-row1 { display: flex; align-items: center; gap: 12px; }
+    .card-order {
+      font-family: 'Noto Serif TC',serif; font-size: 1.25rem; font-weight: 900; color: var(--maroon);
+      background: #fdf2f2; padding: 2px 8px; border-radius: 6px; min-width: 38px; text-align: center;
+    }
+    .card-name   { font-size: 1.2rem; font-weight: 700; color: var(--ink); }
+    .card-dharma { font-size: .95rem; color: #555; font-weight: 500;
+      background: #efe8dc; padding: 2px 8px; border-radius: 4px; }
+    .card-phone  { font-family: monospace; font-size: 1rem; color: #5a4020;
+      margin-left: auto; font-weight: 700; white-space: nowrap; }
+    .card-row2 { display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+      border-top: 1px dashed #efe8dc; padding-top: 8px; }
+
+    .badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: .88rem; font-weight: 900; }
+    .badge-present { background: var(--green-pale); color: var(--green); border: 1px solid var(--green-border); }
+    .badge-none    { background: #f0f0f0; color: #444; border: 1px solid #ccc; }
+    .badge-frozen  { background: #ffd6d6; color: #a03030; border: 1px solid #e07070; }
+
+    .tag { display: inline-block; font-size: .78rem; padding: 3px 8px; border-radius: 8px; font-weight: 700; }
+    .tag-m    { background: #e3f2fd; color: #0d47a1; }
+    .tag-f    { background: #fce4ec; color: #880e4f; }
+    .tag-unit { background: #f3e8ff; color: #5b21b6; }
+    .tag-room { background: #e8f5e9; color: #2e7d32; }
+
+    /* ══════════════════════════════
+       報到卡片（領隊後台）
+    ══════════════════════════════ */
+    .sw-outer {
+      background: #fdf9f3; border-radius: 16px;
+      border: 2px solid var(--gray-light); margin-bottom: 12px; overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    }
+    .sw-outer.present { border-color: var(--green); border-width: 3px; background: linear-gradient(135deg,#c8ecd6,#dff5e8); }
+    .sw-outer.frozen  { border-color: var(--red); border-width: 2px; background: #fff5f5; }
+    .sw-card-info { display: flex; flex-direction: column; padding: 14px 16px 10px; gap: 8px; }
+    .sw-row1 { display: flex; align-items: center; gap: 12px; }
+    .sw-order {
+      font-family: 'Noto Serif TC',serif; font-size: 1.25rem; font-weight: 900; color: var(--maroon);
+      background: #fdf2f2; padding: 2px 8px; border-radius: 6px; min-width: 38px; text-align: center;
+    }
+    .sw-name   { font-size: 1.2rem; font-weight: 700; }
+    .sw-dharma { font-size: .95rem; color: #555; background: #efe8dc; padding: 2px 8px; border-radius: 4px; }
+    .sw-phone  { font-size: 1rem; color: #1a4a8a; margin-left: auto; font-weight: 700;
+      text-decoration: none; white-space: nowrap; }
+    .sw-phone:active { opacity: .7; }
+    .sw-row2 { display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+      border-top: 1px dashed #e2e2e2; padding-top: 8px; }
+    .sw-time { font-size: .78rem; color: var(--green); font-weight: 700; margin-left: auto; }
+    .sw-badge-wrap { margin-left: auto; }
+
+    /* ── 長按按鈕 ── */
+    .sw-action-row { display: flex; gap: 10px; padding: 4px 16px 14px; }
+    .hold-btn {
+      flex: 1; position: relative; overflow: hidden;
+      padding: 16px 8px; border-radius: 14px; border: none;
+      font-family: 'Noto Sans TC',sans-serif; font-weight: 900; font-size: .88rem;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      user-select: none; touch-action: manipulation; min-height: 72px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .hold-btn .hb-icon  { font-size: 1.5rem; line-height: 1; }
+    .hold-btn .hb-label { font-size: .82rem; text-align: center; font-weight: 800; }
+    .hold-btn.holding   { transform: scale(0.96); animation: pulse-border 1.5s infinite alternate; }
+    @keyframes pulse-border {
+      from { box-shadow: 0 0 0 0 rgba(180,120,60,0.3); }
+      to   { box-shadow: 0 0 0 6px rgba(180,120,60,0); }
+    }
+    .hold-progress {
+      position: absolute; inset: 0; width: 0%;
+      pointer-events: none; transition: none; border-radius: 14px;
+    }
+    .hold-btn .hb-content { position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+    .hb-checkin { background: #f8f5f0; color: #5a4a3a; border: 2px solid #d8c8b0; }
+    .hb-checkin .hold-progress { background: #b8a080; opacity: .35; }
+    .hb-undo    { background: var(--red-pale); color: var(--red); border: 2px solid var(--red-border); }
+    .hb-undo .hold-progress { background: var(--red); opacity: .25; }
+    .hb-freeze  { background: #f5f5f5; color: #444; border: 2px solid #ccc; }
+    .hb-freeze .hold-progress { background: #888; opacity: .20; }
+    .hb-freeze.is-frozen { background: var(--red-pale); color: #a03030; border-color: #e07070; }
+    .hb-freeze.is-frozen .hold-progress { background: #e07070; opacity: .25; }
+    .hb-disabled { background: #f5f5f5; color: #999; border: 2px solid #e0e0e0; cursor: not-allowed; }
+
+    /* ══ Modal / Bottom Sheet ══ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.6); z-index: 500;
+      align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-sheet {
+      background: #fff; border-radius: 24px 24px 0 0;
+      padding: 0 18px 36px; width: 100%; max-width: 480px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,.25);
+      animation: slideUp .22s ease; max-height: 92vh; overflow-y: auto;
+    }
+    @keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .sheet-handle { width: 50px; height: 6px; background: #ccc; border-radius: 4px; margin: 16px auto 20px; }
+    .sheet-title {
+      font-family: 'Noto Serif TC',serif; font-size: 1.3rem; font-weight: 900;
+      color: var(--maroon); text-align: center; margin-bottom: 18px;
+    }
+
+    /* PIN */
+    .pin-label { font-size: 1rem; color: var(--ink); margin-bottom: 12px; font-weight: 700; text-align: center; }
+    .pin-field {
+      width: 100%; padding: 16px; font-size: 2.4rem; text-align: center; letter-spacing: .4em;
+      border: 2.5px solid #c8b48a; border-radius: 14px;
+      background: var(--gold-pale); color: var(--ink);
+      font-family: 'Noto Serif TC',serif; font-weight: 900;
+      outline: none; -webkit-appearance: none;
+    }
+    .pin-field:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(184,134,11,.15); background:#fff; }
+    .pin-submit {
+      width: 100%; border: none; border-radius: 14px; padding: 16px;
+      font-family: 'Noto Serif TC',serif; font-size: 1.15rem; letter-spacing: 4px; font-weight: 900;
+      background: #ccc; color: #fff; cursor: pointer; transition: all .2s; margin-top: 14px;
+    }
+    .pin-submit.ready { background: linear-gradient(135deg,var(--teal),#1e4238);
+      box-shadow: 0 4px 15px rgba(45,93,79,.3); }
+    .pin-submit.ready:active { transform: scale(.98); }
+    .pin-error { text-align: center; font-size: .95rem; color: var(--red);
+      min-height: 24px; margin-top: 10px; font-weight: 700; }
+
+    /* 領隊後台 */
+    .leader-section { margin-bottom: 16px; }
+    .leader-section-title {
+      font-family: 'Noto Serif TC',serif; font-size: 1.05rem; font-weight: 900;
+      color: var(--maroon); margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 2px solid #f5e6cc;
+    }
+    .admin-summary { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 14px; }
+    .sum-box { background: #fffaf5; border-radius: 14px; padding: 14px; text-align: center;
+      border: 2px solid #ffe0b2; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02); }
+    .sum-box .s-num { font-size: 2rem; font-weight: 900; font-family: 'Noto Serif TC',serif; line-height: 1; }
+    .sum-box .s-lbl { font-size: .85rem; color: #5a4020; margin-top: 4px; font-weight: 700; }
+
+    /* 通用按鈕 */
+    .btn {
+      display: inline-block; padding: 15px 18px; border-radius: 14px; border: none;
+      font-family: 'Noto Sans TC',sans-serif; font-weight: 900; font-size: 1rem;
+      cursor: pointer; transition: opacity .15s; text-align: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { opacity: .72; }
+    .btn-green   { background: var(--green); color: #fff; }
+    .btn-red     { background: var(--red); color: #fff; }
+    .btn-gray    { background: #555; color: #fff; }
+    .btn-outline { background: var(--white); border: 2.5px solid var(--maroon); color: var(--maroon); }
+    .btn-full    { width: 100%; display: block; }
+
+    /* 領隊底部三按鈕 */
+    .leader-bottom-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; padding-bottom: 6px; }
+
+    /* 回頂按鈕 */
+    #back-to-top {
+      display: none; position: fixed; bottom: 28px; right: 18px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--maroon); color: #fff;
+      border: none; font-size: 1.3rem; font-weight: 900;
+      cursor: pointer; z-index: 600;
+      box-shadow: 0 4px 14px rgba(0,0,0,.25);
+      -webkit-tap-highlight-color: transparent;
+    }
+    #back-to-top.show { display: flex; align-items: center; justify-content: center; }
+
+    .flex-gap { display: flex; gap: 10px; }
+    .mt-3 { margin-top: 14px; } .mt-4 { margin-top: 16px; } .mb-3 { margin-bottom: 14px; }
+    .hidden { display: none !important; }
+
+    #toast {
+      position: fixed; bottom: 36px; left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: #111; color: #fff; padding: 14px 26px;
+      border-radius: 40px; font-size: 1rem; font-weight: 700;
+      z-index: 9999; transition: transform .28s;
+      white-space: nowrap; box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    footer { text-align: center; padding: 18px 0 36px; color: #bbb; font-size: .7rem; }
+  </style>
+</head>
+<body>
+<div id="loading-bar"></div>
+
+<div id="sticky-top">
+  <header>
+    <h1>☸ 0524浴佛法會 第13車義工報到</h1>
+    <button id="leader-gear" onclick="openLeaderSheet()" title="領隊專區">⚙️</button>
+  </header>
+  <div id="top-stats">
+    <div class="top-stat-box"><div class="num num-green" id="ts-present">—</div><div class="lbl">已報到</div></div>
+    <div class="top-stat-box"><div class="num num-red"   id="ts-pending">—</div><div class="lbl">未到</div></div>
+    <div class="top-stat-box"><div class="num num-gray"  id="ts-total">—</div><div class="lbl">應到</div></div>
+  </div>
+</div>
+
+<div id="main-body">
+  <div id="self-disabled-note">⛔ 領隊已關閉自助報到功能</div>
+  <div id="readonly-bar">👁 唯讀模式・僅供查閱</div>
+
+  <div class="jump-bar">
+    <span class="jump-icon">🔍</span>
+    <select class="jump-select" id="jump-home" onchange="jumpToCard(this,'card-')">
+      <option value="">快速跳轉至姓名…</option>
+    </select>
+    <span class="jump-arrow">▼</span>
+  </div>
+
+  <div class="section-header">
+    <h2>📋 名單</h2>
+    <div class="filter-bar">
+      <button class="filter-btn active" id="filter-all"     onclick="setFilter('all')">全部</button>
+      <button class="filter-btn"        id="filter-pending" onclick="setFilter('pending')">未到</button>
+      <button class="filter-btn"                            onclick="refreshMain()">🔄 更新</button>
+    </div>
+  </div>
+  <div id="cards" class="cards-grid"></div>
+</div>
+
+<footer>AQE@2026 · 0524浴佛法會 第13車</footer>
+<div id="toast"></div>
+<button id="back-to-top">↑</button>
+
+<!-- ════ 卡片自助報到 Sheet ════ -->
+<div class="modal-overlay" id="card-self-sheet">
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🙋 義工自助報到</div>
+    <div id="card-action-area"></div>
+    <button class="btn btn-gray btn-full mt-3" onclick="closeCardSelfSheet()">關閉</button>
+  </div>
+</div>
+
+<!-- ════ 領隊專區 Sheet ════ -->
+<div class="modal-overlay" id="leader-sheet">
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">⚙️ 領隊專區</div>
+
+    <div id="leader-login-panel">
+      <div class="pin-label">請輸入領隊代碼</div>
+      <input type="tel" class="pin-field" id="leader-pin-input"
+        maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="••••"
+        oninput="onLeaderPinInput(this)"
+        onkeydown="if(event.key==='Enter'&&!document.getElementById('leader-pin-submit').disabled)doLeaderLogin()">
+      <button class="pin-submit" id="leader-pin-submit" disabled onclick="doLeaderLogin()">進　入</button>
+      <div class="pin-error" id="leader-login-err"></div>
+      <button class="btn btn-gray btn-full mt-3" onclick="closeLeaderSheet()">取消</button>
+    </div>
+
+    <div id="leader-panel" class="hidden">
+      <div class="leader-section">
+        <div class="leader-section-title">⚡ 報到管理</div>
+        <div class="admin-summary">
+          <div class="sum-box"><div class="s-num num-green" id="adm-present">—</div><div class="s-lbl">已報到</div></div>
+          <div class="sum-box"><div class="s-num num-red"   id="adm-pending">—</div><div class="s-lbl">未到</div></div>
+        </div>
+        <div class="jump-bar">
+          <span class="jump-icon">🔍</span>
+          <select class="jump-select" id="jump-leader" onchange="jumpToCard(this,'swo-')">
+            <option value="">快速跳轉至姓名…</option>
+          </select>
+          <span class="jump-arrow">▼</span>
+        </div>
+        <div id="checkin-list"></div>
+      </div>
+      <div class="leader-bottom-btns">
+        <button class="btn btn-gray btn-full" onclick="leaderLogout()">退出領隊後台</button>
+        <button class="btn btn-red btn-full"  onclick="clearAllData()">🗑 清除所有記錄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════╗
+// ║  ★ 部署設定（需要更改時只需修改此區塊）              ║
+// ╠══════════════════════════════════════════════════════╣
+const GAS_DEPLOY_ID = 'AKfycbyr2TzUPjq3GYn-Z9bZCKpGIL3y1701MrlKfIZmnB_eAcK4Bph2XSMi3tWTO2NJFYi5';
+const LEADER_CODE   = '7777';
+// ╚══════════════════════════════════════════════════════╝
+
+const API     = `https://script.google.com/macros/s/${GAS_DEPLOY_ID}/exec`;
+const HOLD_MS = 3000;
+
+let data               = { students: [], statuses: {}, frozen: [] };
+let isLeader           = false;
+let selfCheckinEnabled = true;
+let filterMode         = 'all';
+let isReadonly         = false;
+let selfStudent        = null;
+
+// ── 工具 ──
+function nCode(r){ return String(r||'').padStart(3,'0'); }
+function isFrozen(code){ return data.frozen.includes(nCode(code)); }
+function isPresentByCode(code){
+  const c = nCode(code); if(isFrozen(c)) return false;
+  const st = data.statuses[c]; return !!st && st.type === 'present';
+}
+function getSt(code){ return data.statuses[nCode(code)] || null; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function setLoading(on){ document.getElementById('loading-bar').style.display = on?'block':'none'; }
+let _tt;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function triggerVibrate(){ if(navigator.vibrate) navigator.vibrate(120); }
+function calcStats(){
+  const active  = data.students.filter(s => !isFrozen(s.code));
+  const present = active.filter(s => isPresentByCode(s.code)).length;
+  return { total: active.length, present, pending: active.length - present };
+}
+
+// ── API ──
+async function apiCall(p){
+  const res = await fetch(API + '?' + new URLSearchParams(p));
+  return res.json();
+}
+async function loadData(){
+  setLoading(true);
+  try {
+    const r = await apiCall({ action: 'getAll' });
+    if(r && r.ok){
+      const norm = {};
+      Object.entries(r.statuses||{}).forEach(([k,v]) => { norm[nCode(k)] = v; });
+      r.statuses = norm;
+      r.frozen   = (r.frozen||[]).map(c => nCode(c));
+      if(typeof r.selfCheckin === 'boolean') selfCheckinEnabled = r.selfCheckin;
+      data = r;
+    }
+  } catch(e){ showToast('⚠ 無法連線雲端'); }
+  setLoading(false);
+}
+
+// ── 統計 ──
+function renderStats(){
+  const { total, present, pending } = calcStats();
+  ['ts-present','adm-present'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=present; });
+  ['ts-pending','adm-pending'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=pending; });
+  const t = document.getElementById('ts-total'); if(t) t.textContent = total;
+}
+
+// ── 標籤 ──
+function tagHtml(s){
+  let h = '';
+  if(s.gender) h += `<span class="tag tag-${s.gender==='女'?'f':'m'}">${esc(s.gender)}</span>`;
+  if(s.unit)   h += `<span class="tag tag-unit">${esc(s.unit)}</span>`;
+  if(s.room)   h += `<span class="tag tag-room">🛏${esc(s.room)}</span>`;
+  return h;
+}
+
+// ── 快速跳轉 ──
+function buildJumpSelect(selId){
+  const sel = document.getElementById(selId); if(!sel) return;
+  while(sel.options.length > 1) sel.remove(1);
+  data.students.slice().sort((a,b)=>Number(a.order)-Number(b.order)).forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = nCode(s.code);
+    const fr = isFrozen(s.code), pr = isPresentByCode(s.code);
+    opt.textContent = `${fr?'❄':pr?'✅':'⬜'} ${s.order}. ${s.name}${s.dharma?' '+s.dharma:''}`;
+    sel.appendChild(opt);
+  });
+}
+function jumpToCard(sel, prefix){
+  const code = sel.value; if(!code) return;
+  const el = document.getElementById(prefix + code);
+  if(el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  sel.value = '';
+}
+
+// ── 主體渲染 ──
+function renderMain(){
+  renderStats();
+  const selfNote = document.getElementById('self-disabled-note');
+  const roBar    = document.getElementById('readonly-bar');
+  const gear     = document.getElementById('leader-gear');
+  if(isReadonly){
+    gear.classList.add('hidden');
+    roBar.style.display = 'block';
+    if(selfNote) selfNote.style.display = 'none';
+  } else {
+    gear.classList.remove('hidden');
+    roBar.style.display = 'none';
+    if(selfNote) selfNote.style.display = selfCheckinEnabled ? 'none' : 'block';
+  }
+  renderCards();
+  buildJumpSelect('jump-home');
+}
+async function refreshMain(){ await loadData(); renderMain(); showToast('✅ 已更新'); }
+
+function setFilter(mode){
+  filterMode = mode;
+  document.getElementById('filter-all').classList.toggle('active', mode==='all');
+  document.getElementById('filter-pending').classList.toggle('active', mode==='pending');
+  renderCards();
+}
+
+// ── 主頁名單卡片 ──
+function renderCards(){
+  const c = document.getElementById('cards');
+  if(!data.students.length){
+    c.innerHTML = '<div style="text-align:center;color:var(--gray);padding:36px;">尚未載入名單</div>';
+    return;
+  }
+  c.innerHTML = '';
+  let sorted = [...data.students].sort((a,b)=>Number(a.order)-Number(b.order));
+  if(filterMode === 'pending') sorted = sorted.filter(s => !isPresentByCode(s.code) && !isFrozen(s.code));
+  sorted.forEach(s => {
+    const fr   = isFrozen(s.code);
+    const pr   = isPresentByCode(s.code);
+    const isCore = Number(s.order) <= 3;   // 前3張核心領隊
+    const el   = document.createElement('div');
+    // 狀態 class 組合
+    let cls = 'card';
+    if(fr)           cls += ' frozen';
+    else if(pr)      cls += ' present';
+    if(isCore && !fr) cls += ' core-leader';
+    el.className = cls;
+    el.id = 'card-' + nCode(s.code);
+    if(!fr && !isReadonly) el.onclick = () => openCardSelfSheet(nCode(s.code));
+
+    const unit  = s.unit ? `<span class="tag tag-unit">${esc(s.unit)}</span>` : '';
+    const room  = s.room ? `<span class="tag tag-room">🛏${esc(s.room)}</span>` : '';
+    // 前3張顯示電話（純文字不可點）
+    const phoneHtml = (isCore && s.phone)
+      ? `<span class="card-phone">${esc(s.phone)}</span>` : '';
+
+    el.innerHTML = `
+      <div class="card-row1">
+        <span class="card-order">${s.order}</span>
+        <span class="card-name">${esc(s.name)}</span>
+        ${s.dharma ? `<span class="card-dharma">${esc(s.dharma)}</span>` : ''}
+        ${phoneHtml}
+      </div>
+      <div class="card-row2">
+        ${unit}${room}
+        <span style="margin-left:auto;">
+          ${fr  ? '<span class="badge badge-frozen">❄ 凍結</span>'
+          : pr  ? '<span class="badge badge-present">已報到</span>'
+                : '<span class="badge badge-none">未到</span>'}
+        </span>
+      </div>`;
+    c.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════
+// 長按核心
+// ══════════════════════════════════════
+function attachHold(btn, onComplete){
+  const prog = btn.querySelector('.hold-progress');
+  let raf = null, startT = 0, active = false;
+  function start(){
+    if(btn.classList.contains('hb-disabled')) return;
+    active = true; startT = Date.now();
+    btn.classList.add('holding');
+    function tick(){
+      if(!active) return;
+      const pct = Math.min(100, (Date.now()-startT)/HOLD_MS*100);
+      prog.style.width = pct + '%';
+      if(pct < 100) raf = requestAnimationFrame(tick);
+      else { cancel(); onComplete(); }
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function cancel(){
+    active = false; cancelAnimationFrame(raf);
+    prog.style.width = '0%'; btn.classList.remove('holding');
+  }
+  btn.addEventListener('mousedown',   start);
+  btn.addEventListener('touchstart',  start, { passive: true });
+  btn.addEventListener('mouseup',     cancel);
+  btn.addEventListener('mouseleave',  cancel);
+  btn.addEventListener('touchend',    cancel, { passive: true });
+  btn.addEventListener('touchcancel', cancel, { passive: true });
+}
+
+// ── 建立報到卡片 ──
+function buildActionCard(s, selfMode){
+  const code = nCode(s.code);
+  const fr   = isFrozen(code);
+  const pr   = isPresentByCode(code);
+  const st   = getSt(code);
+
+  const outer = document.createElement('div');
+  outer.className = 'sw-outer' + (fr ? ' frozen' : pr ? ' present' : '');
+  outer.id = 'swo-' + code;
+
+  // 後台顯示電話（可點撥），自助不顯示
+  const phoneHtml = (!selfMode && s.phone)
+    ? `<a class="sw-phone" href="tel:${s.phone.replace(/[^0-9+]/g,'')}">📞 ${esc(s.phone)}</a>`
+    : '';
+  const timeStr = st && st.timestamp && !fr
+    ? `<span class="sw-time">⏱${st.timestamp}</span>` : '';
+
+  const info = document.createElement('div');
+  info.className = 'sw-card-info';
+  info.innerHTML = `
+    <div class="sw-row1">
+      <span class="sw-order">${s.order}</span>
+      <span class="sw-name">${esc(s.name)}</span>
+      ${s.dharma ? `<span class="sw-dharma">${esc(s.dharma)}</span>` : ''}
+      ${phoneHtml}
+    </div>
+    <div class="sw-row2">
+      ${tagHtml(s)}
+      <span class="sw-badge-wrap">
+        ${fr  ? '<span class="badge badge-frozen">❄ 凍結</span>'
+        : pr  ? '<span class="badge badge-present">已報到</span>'
+              : '<span class="badge badge-none">未到</span>'}
+      </span>
+      ${timeStr}
+    </div>`;
+  outer.appendChild(info);
+
+  const actionRow = document.createElement('div');
+  actionRow.className = 'sw-action-row';
+  if(!fr){
+    if(!pr){
+      const btn = makeHoldBtn('hb-checkin', '✅', '按三秒\n報到');
+      attachHold(btn, () => doPresent(code, selfMode, outer));
+      actionRow.appendChild(btn);
+    } else {
+      const btn = makeHoldBtn('hb-undo', '↩', '按三秒\n取消報到');
+      attachHold(btn, () => doUndo(code, selfMode, outer));
+      actionRow.appendChild(btn);
+    }
+  } else {
+    actionRow.appendChild(makeHoldBtn('hb-disabled', '🔒', '已凍結\n無法報到'));
+  }
+  if(!selfMode){
+    const fb = makeHoldBtn('hb-freeze' + (fr?' is-frozen':''), '❄', fr?'按三秒\n解凍此人':'按三秒\n凍結此人');
+    attachHold(fb, () => toggleFreeze(code));
+    actionRow.appendChild(fb);
+  }
+  outer.appendChild(actionRow);
+  return outer;
+}
+
+function makeHoldBtn(cls, icon, label){
+  const btn = document.createElement('button');
+  btn.className = 'hold-btn ' + cls;
+  const prog = document.createElement('div');
+  prog.className = 'hold-progress';
+  btn.appendChild(prog);
+  const content = document.createElement('div');
+  content.className = 'hb-content';
+  content.innerHTML = `<span class="hb-icon">${icon}</span><span class="hb-label">${label.replace('\n','<br>')}</span>`;
+  btn.appendChild(content);
+  return btn;
+}
+
+function doPresent(code, selfMode, outer){
+  const c = nCode(code);
+  data.statuses[c] = { type: 'present', timestamp: new Date().toLocaleString('zh-TW') };
+  triggerVibrate(); renderStats(); renderCards(); buildJumpSelect('jump-home');
+  rebuildCard(c, selfMode, outer);
+  if(isLeader) buildJumpSelect('jump-leader');
+  if(selfMode){
+    showToast(`✅ ${selfStudent?selfStudent.name:''} 報到成功！`);
+    setTimeout(() => { closeSelfSheet(); closeCardSelfSheet(); }, 900);
+  } else { showToast('✅ 已報到！'); }
+  apiCall({ action: 'checkin', code: c, type: 'present', source: selfMode?'student':'leader' })
+    .catch(() => showToast('⚠ 同步失敗'));
+}
+function doUndo(code, selfMode, outer){
+  const c = nCode(code);
+  delete data.statuses[c];
+  triggerVibrate(); renderStats(); renderCards(); buildJumpSelect('jump-home');
+  rebuildCard(c, selfMode, outer);
+  if(isLeader) buildJumpSelect('jump-leader');
+  showToast('↩ 已復原為未到');
+  apiCall({ action: 'resetOne', code: c }).catch(() => showToast('⚠ 同步失敗'));
+}
+function rebuildCard(code, selfMode, oldOuter){
+  const c = nCode(code);
+  const s = data.students.find(s => nCode(s.code) === c);
+  if(!s || !oldOuter || !oldOuter.parentNode) return;
+  oldOuter.parentNode.replaceChild(buildActionCard(s, selfMode), oldOuter);
+}
+
+// ── 卡片點擊自助報到 ──
+function openCardSelfSheet(code){
+  if(!selfCheckinEnabled){ showToast('⛔ 自助報到已關閉'); return; }
+  const s = data.students.find(s => nCode(s.code) === code);
+  if(!s) return;
+  selfStudent = s;
+  const area = document.getElementById('card-action-area');
+  area.innerHTML = '';
+  area.appendChild(buildActionCard(s, true));
+  document.getElementById('card-self-sheet').classList.add('show');
+}
+function closeCardSelfSheet(){
+  document.getElementById('card-self-sheet').classList.remove('show');
+}
+function closeSelfSheet(){ closeCardSelfSheet(); }
+
+// ── 領隊 Sheet ──
+function openLeaderSheet(){
+  if(isLeader){
+    document.getElementById('leader-login-panel').classList.add('hidden');
+    document.getElementById('leader-panel').classList.remove('hidden');
+    renderStats(); renderCheckinList(); buildJumpSelect('jump-leader');
+  } else {
+    document.getElementById('leader-login-panel').classList.remove('hidden');
+    document.getElementById('leader-panel').classList.add('hidden');
+    document.getElementById('leader-pin-input').value = '';
+    document.getElementById('leader-login-err').textContent = '';
+    const btn = document.getElementById('leader-pin-submit');
+    btn.disabled = true; btn.className = 'pin-submit';
+  }
+  document.getElementById('leader-sheet').classList.add('show');
+  if(!isLeader) setTimeout(()=>document.getElementById('leader-pin-input').focus(), 120);
+}
+function closeLeaderSheet(){
+  document.getElementById('leader-sheet').classList.remove('show');
+  document.getElementById('back-to-top').classList.remove('show');
+}
+function onLeaderPinInput(el){
+  el.value = el.value.replace(/\D/g,'').slice(0,4);
+  document.getElementById('leader-login-err').textContent = '';
+  const ready = el.value.length >= 4;
+  const btn = document.getElementById('leader-pin-submit');
+  btn.disabled = !ready; btn.className = 'pin-submit' + (ready?' ready':'');
+}
+function doLeaderLogin(){
+  const val = document.getElementById('leader-pin-input').value;
+  if(val === LEADER_CODE){
+    isLeader = true;
+    document.getElementById('leader-login-err').textContent = '';
+    document.getElementById('leader-login-panel').classList.add('hidden');
+    document.getElementById('leader-panel').classList.remove('hidden');
+    leaderRefresh();
+  } else {
+    document.getElementById('leader-login-err').textContent = '⚠ 代碼錯誤';
+    document.getElementById('leader-pin-input').value = '';
+    const btn = document.getElementById('leader-pin-submit');
+    btn.disabled = true; btn.className = 'pin-submit';
+  }
+}
+function leaderLogout(){
+  isLeader = false;
+  document.getElementById('leader-panel').classList.add('hidden');
+  document.getElementById('leader-login-panel').classList.remove('hidden');
+  closeLeaderSheet(); showToast('已退出領隊後台');
+}
+async function leaderRefresh(){
+  await loadData(); renderStats(); renderCheckinList();
+  buildJumpSelect('jump-leader'); showToast('✅ 已同步');
+}
+function toggleSelfCheckin(){
+  selfCheckinEnabled = !selfCheckinEnabled;
+  renderMain();
+  showToast(selfCheckinEnabled ? '✅ 自助報到已開啟' : '🔒 自助報到已關閉');
+}
+
+function renderCheckinList(){
+  const container = document.getElementById('checkin-list');
+  container.innerHTML = '';
+  [...data.students].sort((a,b)=>Number(a.order)-Number(b.order))
+    .forEach(s => container.appendChild(buildActionCard(s, false)));
+}
+
+async function toggleFreeze(code){
+  const c = nCode(code), fr = isFrozen(c);
+  setLoading(true);
+  try {
+    if(fr){
+      await Promise.all([
+        apiCall({ action: 'unfreezeOne', code: c }),
+        apiCall({ action: 'resetOne',    code: c })
+      ]);
+      data.frozen = data.frozen.filter(f => f !== c);
+      delete data.statuses[c];
+      showToast('🔓 已解凍・恢復未到狀態');
+    } else {
+      await apiCall({ action: 'freezeOne', code: c });
+      data.frozen.push(c);
+      showToast('❄ 已凍結・不計入應到人數');
+    }
+    renderStats(); renderCards(); renderCheckinList();
+    buildJumpSelect('jump-home'); buildJumpSelect('jump-leader');
+  } catch(e){ showToast('⚠ 操作失敗'); }
+  setLoading(false);
+}
+
+async function clearAllData(){
+  if(!confirm('確定清除所有報到記錄與凍結設定？\n此操作無法復原，請確認。')) return;
+  if(!confirm('⚠ 再次確認：清除後所有人回到未到、無凍結的空白狀態。\n確定清除？')) return;
+  setLoading(true);
+  try {
+    await apiCall({ action: 'clearStatus' });
+    data.statuses = {};
+    for(const c of [...data.frozen]) await apiCall({ action: 'unfreezeOne', code: c });
+    data.frozen = [];
+    renderStats(); renderCards(); renderCheckinList();
+    buildJumpSelect('jump-home'); buildJumpSelect('jump-leader');
+    showToast('🗑 已清除所有報到與凍結記錄');
+  } catch(e){ showToast('⚠ 清除失敗'); }
+  setLoading(false);
+}
+
+document.getElementById('card-self-sheet').addEventListener('click', function(e){ if(e.target===this) closeCardSelfSheet(); });
+document.getElementById('leader-sheet').addEventListener('click', function(e){ if(e.target===this) closeLeaderSheet(); });
+
+document.getElementById('leader-sheet').addEventListener('scroll', function(){
+  const sheet = this.querySelector('.modal-sheet');
+  const btn = document.getElementById('back-to-top');
+  if(sheet && sheet.scrollTop > 120) btn.classList.add('show');
+  else btn.classList.remove('show');
+}, true);
+document.getElementById('back-to-top').onclick = function(){
+  const sheet = document.querySelector('#leader-sheet .modal-sheet');
+  if(sheet) sheet.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.onload = async () => {
+  isReadonly = (window.location.hash === '#readonly');
+  await loadData();
+  renderMain();
+  setInterval(async () => { await loadData(); renderMain(); }, 30000);
+};
+</script>
+</body>
+</html>
