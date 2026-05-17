@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>報到操作指南</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --maroon: #7b1d1d;
+      --maroon-light: #a02828;
+      --gold: #b8860b;
+      --gold-pale: #fdf6e3;
+      --gold-border: #e8c84a;
+      --cream: #faf7f0;
+      --ink: #1a1410;
+      --gray: #5a4a3a;
+      --green: #1a5c38;
+      --green-pale: #edf7f1;
+      --green-border: #74c69d;
+      --red: #c1121f;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.75;
+      padding-bottom: 60px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.10);
+      min-height: 100vh;
+    }
+
+    /* ── 封面 ── */
+    .cover {
+      background: linear-gradient(160deg, #3a0e0e 0%, #7b1d1d 50%, #a8350d 100%);
+      padding: 48px 28px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255,215,100,0.12), transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(255,180,80,0.08), transparent 50%);
+    }
+    .cover-lotus { font-size: 3.5rem; margin-bottom: 12px; position: relative; }
+    .cover h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.55rem; font-weight: 900;
+      color: #fff; letter-spacing: 0.08em;
+      line-height: 1.4; position: relative;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .cover h1 span { color: #fde68a; }
+    .cover .sub {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.88rem; margin-top: 10px;
+      letter-spacing: 0.12em; position: relative;
+    }
+    .cover-divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, #fde68a, transparent);
+      margin: 16px auto 0;
+    }
+
+    /* ── 主體 ── */
+    .body { padding: 0 18px; }
+
+    /* 重要提示橫幅 */
+    .notice {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 2px solid var(--gold-border);
+      border-radius: 14px; padding: 16px 18px;
+      margin: 20px 0; display: flex; gap: 14px; align-items: flex-start;
+    }
+    .notice-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .notice-text { font-size: 0.92rem; color: #7c4a00; font-weight: 500; line-height: 1.6; }
+    .notice-text strong { color: #5a3000; }
+
+    /* ── 步驟區塊 ── */
+    .section-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.1rem; font-weight: 900;
+      color: var(--maroon); margin: 28px 0 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1.5px;
+      background: linear-gradient(90deg, #ddd5c0, transparent);
+    }
+
+    .step-card {
+      background: var(--white); border-radius: 16px;
+      border: 1.5px solid #e8ddd0;
+      margin-bottom: 14px; overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .step-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px 10px;
+    }
+    .step-num {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--maroon); color: #fff;
+      font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.05rem; font-weight: 700; color: var(--ink);
+    }
+    .step-body { padding: 0 18px 16px; }
+    .step-body p { font-size: 0.92rem; color: var(--gray); line-height: 1.7; margin-bottom: 8px; }
+    .step-body p:last-child { margin-bottom: 0; }
+
+    /* 示意圖框 */
+    .mockup {
+      background: #f8f4ee; border: 1.5px solid #e0d4c0;
+      border-radius: 12px; padding: 14px 16px; margin: 10px 0;
+      font-size: 0.88rem;
+    }
+    .mockup-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px; margin-bottom: 6px;
+    }
+    .mockup-row:last-child { margin-bottom: 0; }
+    .mockup-row.present { background: #edf7f1; border: 1.5px solid #74c69d; }
+    .mockup-row.pending { background: #fff; border: 1.5px solid #e0d4c0; }
+    .mockup-row.frozen  { background: #fff5f5; border: 1.5px solid #e0a0a0; opacity: 0.8; }
+    .mockup-num { font-family: 'Noto Serif TC', serif; font-weight: 900; color: var(--maroon); min-width: 24px; font-size: 1rem; }
+    .mockup-info { flex: 1; }
+    .mockup-name { font-weight: 700; font-size: 0.92rem; }
+    .mockup-sub  { font-size: 0.78rem; color: #888; }
+    .badge-sm {
+      font-size: 0.75rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 14px; white-space: nowrap;
+    }
+    .badge-present { background: #e8f5e9; color: #1a5c38; border: 1px solid #74c69d; }
+    .badge-none    { background: #f0f0f0; color: #555; border: 1px solid #ccc; }
+    .badge-frozen  { background: #ffd6d6; color: #a03030; border: 1px solid #e07070; }
+
+    /* 長按示意 */
+    .hold-demo {
+      display: flex; gap: 8px; margin: 10px 0;
+    }
+    .hold-box {
+      flex: 1; border-radius: 12px; padding: 14px 8px;
+      text-align: center; font-size: 0.82rem; font-weight: 700;
+      border: 2px solid;
+    }
+    .hold-box .h-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .hold-box.checkin { background: #f8f5f0; border-color: #d8c8b0; color: #5a4a3a; }
+    .hold-box.undo    { background: #fff0f0; border-color: #ffb3b3; color: #c1121f; }
+
+    /* 進度條動畫示意 */
+    .progress-demo {
+      height: 8px; border-radius: 4px; background: #e8ddd0; margin: 8px 0; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 4px; background: #b8a080;
+      animation: fill3s 3s linear infinite;
+    }
+    @keyframes fill3s {
+      0%   { width: 0%; }
+      90%  { width: 90%; }
+      100% { width: 100%; }
+    }
+
+    /* 狀態說明表 */
+    .status-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+    .status-table th {
+      background: #f5ece0; color: var(--maroon);
+      font-family: 'Noto Serif TC', serif; font-size: 0.85rem; font-weight: 700;
+      padding: 9px 12px; border-bottom: 2px solid #e0d0b8; text-align: left;
+    }
+    .status-table td {
+      padding: 9px 12px; font-size: 0.88rem; color: var(--gray);
+      border-bottom: 1px solid #f0e8dc; vertical-align: top;
+    }
+    .status-table tr:last-child td { border-bottom: none; }
+
+    /* 注意事項 */
+    .caution {
+      background: #fff5f5; border: 1.5px solid #ffb3b3;
+      border-radius: 12px; padding: 14px 16px; margin: 10px 0;
+      font-size: 0.88rem; color: #8b2020; line-height: 1.65;
+    }
+    .caution strong { color: #c1121f; }
+
+    .tip {
+      background: var(--green-pale); border: 1.5px solid var(--green-border);
+      border-radius: 12px; padding: 14px 16px; margin: 10px 0;
+      font-size: 0.88rem; color: #1a4a30; line-height: 1.65;
+    }
+
+    /* 頁尾 */
+    footer {
+      text-align: center; padding: 32px 18px 20px;
+      color: #b0a090; font-size: 0.75rem; line-height: 1.8;
+    }
+    footer .lotus { font-size: 1.5rem; display: block; margin-bottom: 8px; }
+
+    /* 回頂 */
+    #totop {
+      position: fixed; bottom: 20px; right: 16px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--maroon); color: #fff;
+      border: none; font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      opacity: 0; transition: opacity 0.3s; z-index: 99;
+    }
+    #totop.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover">
+  <h1><span>報到操作指南</span></h1>
+</div>
+
+<div class="body">
+
+  <!-- 重要提示 -->
+  <div class="notice">
+    <div class="notice-icon">📌</div>
+    <div class="notice-text">
+      <strong>請先確認：</strong>領隊會將報到頁面連結傳送至 LINE 群組，請點擊連結開啟頁面後再進行操作。本指南僅說明義工自助報到步驟。
+    </div>
+  </div>
+
+  <!-- 認識畫面 -->
+  <div class="section-title">📱 認識報到頁面</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">①</div>
+      <div class="step-title">頂部統計列</div>
+    </div>
+    <div class="step-body">
+      <p>頁面頂部顯示目前整車的報到狀況，數字會自動更新。</p>
+      <div class="mockup" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+        <div style="background:#fff;border-radius:8px;padding:10px 4px;border:1.5px solid #ede0cc;">
+          <div style="font-size:1.4rem;font-weight:900;color:#1a5c38;font-family:'Noto Serif TC',serif;">8</div>
+          <div style="font-size:0.75rem;color:#5a4020;font-weight:700;">已報到</div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:10px 4px;border:1.5px solid #ede0cc;">
+          <div style="font-size:1.4rem;font-weight:900;color:#b03030;font-family:'Noto Serif TC',serif;">29</div>
+          <div style="font-size:0.75rem;color:#5a4020;font-weight:700;">未到</div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:10px 4px;border:1.5px solid #ede0cc;">
+          <div style="font-size:1.4rem;font-weight:900;color:#5a4020;font-family:'Noto Serif TC',serif;">37</div>
+          <div style="font-size:0.75rem;color:#5a4020;font-weight:700;">應到</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">②</div>
+      <div class="step-title">義工名單</div>
+    </div>
+    <div class="step-body">
+      <p>頁面中段顯示全車義工名單，每人一張卡片，依序號排列，可用上方下拉選單快速跳轉至指定姓名。</p>
+      <div class="mockup">
+        <div class="mockup-row present">
+          <div class="mockup-num">1</div>
+          <div class="mockup-info">
+            <div class="mockup-name">郭旭洲 <span style="font-size:.8rem;color:#666;">法睿</span></div>
+            <div class="mockup-sub">行堂飯區 ・ 普賢寮</div>
+          </div>
+          <span class="badge-sm badge-present">已報到</span>
+        </div>
+        <div class="mockup-row pending">
+          <div class="mockup-num">2</div>
+          <div class="mockup-info">
+            <div class="mockup-name">林靜楓 <span style="font-size:.8rem;color:#666;">傳沂</span></div>
+            <div class="mockup-sub">出坡單位未定 ・ 寮房未定</div>
+          </div>
+          <span class="badge-sm badge-none">未到</span>
+        </div>
+        <div class="mockup-row frozen">
+          <div class="mockup-num">3</div>
+          <div class="mockup-info">
+            <div class="mockup-name">熊宣涵 <span style="font-size:.8rem;color:#666;">傳奘</span></div>
+            <div class="mockup-sub">出坡單位未定</div>
+          </div>
+          <span class="badge-sm badge-frozen">❄ 凍結</span>
+        </div>
+      </div>
+      <table class="status-table" style="margin-top:12px;">
+        <tr>
+          <th>狀態標示</th>
+          <th>意思</th>
+        </tr>
+        <tr>
+          <td><span class="badge-sm badge-present">已報到</span></td>
+          <td>已完成報到，綠色外框</td>
+        </tr>
+        <tr>
+          <td><span class="badge-sm badge-none">未到</span></td>
+          <td>尚未報到</td>
+        </tr>
+        <tr>
+          <td><span class="badge-sm badge-frozen">❄ 凍結</span></td>
+          <td>由領隊設定，不計入應到人數，<strong>無法自助報到</strong></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 自助報到步驟 -->
+  <div class="section-title">🙋 自助報到步驟</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div class="step-title">在名單中找到自己的卡片</div>
+    </div>
+    <div class="step-body">
+      <p>在名單中找到自己的姓名卡片。可使用頁面上方的「快速跳轉」下拉選單，直接選擇姓名快速定位。</p>
+      <div class="tip">💡 卡片依序號排列，與紙本名單相同，方便對照。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div class="step-title">點擊自己的卡片</div>
+    </div>
+    <div class="step-body">
+      <p>輕觸（點擊）自己的卡片，畫面會跳出操作視窗，顯示您的姓名、法名與目前狀態。</p>
+      <div class="caution">
+        ⚠️ <strong>凍結狀態</strong>的卡片無法點擊報到，如有疑問請洽領隊。
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div class="step-title">長按三秒完成報到</div>
+    </div>
+    <div class="step-body">
+      <p>視窗中會出現報到按鈕，<strong>持續按住（長按）三秒</strong>，進度條填滿後即完成報到。</p>
+      <div class="hold-demo">
+        <div class="hold-box checkin">
+          <span class="h-icon">✅</span>
+          按三秒<br>報到
+        </div>
+      </div>
+      <p style="margin-top:6px;">按住後可看到進度條逐漸填滿：</p>
+      <div class="progress-demo"><div class="progress-fill"></div></div>
+      <p>填滿後手機會震動一下，表示報到成功 🎉</p>
+      <div class="tip">💡 若中途放開，進度條會歸零，重新按住即可。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div class="step-title">確認報到成功</div>
+    </div>
+    <div class="step-body">
+      <p>報到成功後，視窗自動關閉，您的卡片會變為<strong>深綠色外框</strong>，狀態顯示「已報到」。</p>
+      <div class="mockup">
+        <div class="mockup-row present">
+          <div class="mockup-num">4</div>
+          <div class="mockup-info">
+            <div class="mockup-name">蔡心誼 <span style="font-size:.8rem;color:#666;">法植</span></div>
+            <div class="mockup-sub">出坡單位未定 ・ 寮房未定</div>
+          </div>
+          <span class="badge-sm badge-present">已報到</span>
+        </div>
+      </div>
+      <p style="margin-top:8px;">頂部的「已報到」人數也會同步增加。</p>
+    </div>
+  </div>
+
+  <!-- 取消報到 -->
+  <div class="section-title">↩ 需要取消報到？</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num" style="background:#c1121f;">!</div>
+      <div class="step-title">長按三秒取消報到</div>
+    </div>
+    <div class="step-body">
+      <p>若已報到但需取消（例如臨時無法出席），點擊自己的卡片，視窗中會出現「取消報到」按鈕，<strong>長按三秒</strong>即可復原為「未到」。</p>
+      <div class="hold-demo">
+        <div class="hold-box undo">
+          <span class="h-icon">↩</span>
+          按三秒<br>取消報到
+        </div>
+      </div>
+      <div class="caution">
+        ⚠️ 取消後狀態恢復為「未到」。如需再次報到，重複步驟 1–3 即可。
+      </div>
+    </div>
+  </div>
+
+  <!-- 常見問題 -->
+  <div class="section-title">❓ 常見問題</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num" style="background:#5a4a3a;font-size:0.85rem;">Q1</div>
+      <div class="step-title">找不到自己的名字？</div>
+    </div>
+    <div class="step-body">
+      <p>使用上方「快速跳轉」下拉選單搜尋，或直接滑動名單尋找。若名單中確實沒有您的名字，請告知領隊。</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num" style="background:#5a4a3a;font-size:0.85rem;">Q2</div>
+      <div class="step-title">按了卡片沒反應？</div>
+    </div>
+    <div class="step-body">
+      <p>可能原因：</p>
+      <p>・您的卡片狀態為「❄ 凍結」，請洽領隊確認<br>
+         ・頁面尚未載入完成，請稍候並重新整理頁面<br>
+         ・網路連線異常，請確認 WiFi 或行動數據</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num" style="background:#5a4a3a;font-size:0.85rem;">Q3</div>
+      <div class="step-title">顯示的數字是即時的嗎？</div>
+    </div>
+    <div class="step-body">
+      <p>是的，頁面每 30 秒自動更新一次。若想立即看到最新狀態，可下拉名單區域重新整理，或重新開啟頁面。</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num" style="background:#5a4a3a;font-size:0.85rem;">Q4</div>
+      <div class="step-title">右上角的齒輪 ⚙️ 是什麼？</div>
+    </div>
+    <div class="step-body">
+      <p>那是領隊專用入口，需要輸入領隊代碼才能進入，義工不需使用。</p>
+    </div>
+  </div>
+
+</div><!-- /body -->
+
+<footer>
+  <span class="lotus">☸</span>
+  0524 浴佛法會 第 12 車<br>
+  義工操作指南 · AQE@2026<br>
+  如有操作疑問，請洽本車領隊
+</footer>
+
+<button id="totop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('totop').classList.toggle('show', window.scrollY > 200);
+});
+</script>
+</body>
+</html>
