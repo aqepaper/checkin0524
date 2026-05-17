@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>義工報到系統 領隊操作指南</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --maroon: #801818;
+      --gold: #aa7a00;
+      --gold-border: #dfbe40;
+      --gold-pale: #fbf7ee;
+      --cream: #faf7f2;
+      --ink: #111122;
+      --gray: #444;
+      --green: #0f522e;
+      --green-pale: #eaf5ed;
+      --green-border: #74c69d;
+      --red: #b21822;
+      --red-pale: #fff2f2;
+      --red-border: #ffccd0;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--cream); color: var(--ink);
+      max-width: 480px; margin: 0 auto;
+      line-height: 1.8; padding-bottom: 60px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.10); min-height: 100vh;
+    }
+
+    /* ── 頁首 ── */
+    .page-header {
+      background: linear-gradient(160deg, #3a0e0e 0%, #801818 60%, #a8350d 100%);
+      padding: 32px 20px 24px; text-align: center;
+    }
+    .page-header .ph-icon { font-size: 2.8rem; margin-bottom: 8px; }
+    .page-header h1 {
+      font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 900;
+      color: #fff; letter-spacing: 0.06em; line-height: 1.5;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .page-header h1 span { color: #fde68a; }
+    .page-header .ph-sub {
+      color: rgba(255,255,255,0.7); font-size: 0.85rem;
+      margin-top: 8px; letter-spacing: 0.1em;
+    }
+
+    /* ── 目錄 ── */
+    .toc {
+      background: var(--gold-pale); border-bottom: 2px solid var(--gold-border);
+      padding: 16px 20px;
+    }
+    .toc-title { font-family: 'Noto Serif TC', serif; font-size: 0.9rem;
+      font-weight: 700; color: var(--gold); margin-bottom: 10px; }
+    .toc a {
+      display: block; padding: 6px 0; font-size: 0.92rem; color: var(--maroon);
+      text-decoration: none; font-weight: 600; border-bottom: 1px dashed #e8d0a0;
+    }
+    .toc a:last-child { border-bottom: none; }
+    .toc a:hover { color: var(--gold); }
+
+    /* ── 篇章標題 ── */
+    .part-header {
+      padding: 24px 20px 16px; border-bottom: 3px solid;
+      margin-bottom: 0;
+    }
+    .part-header.vol { border-color: var(--green); background: linear-gradient(135deg,#f0faf4,#fff); }
+    .part-header.leader { border-color: var(--maroon); background: linear-gradient(135deg,#fff8f0,#fff); }
+    .part-header h2 {
+      font-family: 'Noto Serif TC', serif; font-size: 1.3rem; font-weight: 900;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .part-header.vol h2    { color: var(--green); }
+    .part-header.leader h2 { color: var(--maroon); }
+    .part-header p { font-size: 0.9rem; color: var(--gray); margin-top: 6px; }
+
+    /* ── 主體 ── */
+    .body { padding: 0 18px; }
+
+    /* 區段標題 */
+    .sec-title {
+      font-family: 'Noto Serif TC', serif; font-size: 1.05rem; font-weight: 900;
+      margin: 28px 0 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .sec-title.green  { color: var(--green); }
+    .sec-title.maroon { color: var(--maroon); }
+    .sec-title::after { content:''; flex:1; height:1.5px;
+      background: linear-gradient(90deg,#c8c0b0,transparent); margin-left: 4px; }
+
+    /* 步驟卡片 */
+    .step-card {
+      background: var(--white); border-radius: 16px;
+      border: 1.5px solid #e8ddd0; margin-bottom: 12px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .step-head {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px 10px;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 900; color: #fff;
+    }
+    .step-num.green  { background: var(--green); }
+    .step-num.maroon { background: var(--maroon); }
+    .step-num.gray   { background: #666; }
+    .step-title { font-family: 'Noto Serif TC', serif; font-size: 1.05rem; font-weight: 700; }
+    .step-body  { padding: 0 18px 16px; font-size: 0.92rem; color: var(--gray); line-height: 1.8; }
+    .step-body p { margin-bottom: 8px; }
+    .step-body p:last-child { margin-bottom: 0; }
+
+    /* 示意卡 */
+    .mockup {
+      background: #f8f4ee; border: 1.5px solid #e0d4c0;
+      border-radius: 12px; padding: 12px 14px; margin: 10px 0; font-size: 0.88rem;
+    }
+    .mockup-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px; margin-bottom: 6px;
+    }
+    .mockup-row:last-child { margin-bottom: 0; }
+    .mockup-row.present { background: #dff5e8; border: 1.5px solid #74c69d; }
+    .mockup-row.pending { background: #fdf9f3; border: 1.5px solid #e0d4c0; }
+    .mockup-row.frozen  { background: #fff5f5; border: 1.5px solid #e0a0a0; opacity: 0.8; }
+    .mockup-num  { font-family:'Noto Serif TC',serif; font-weight:900; color:var(--maroon);
+      background:#fdf2f2; padding:2px 8px; border-radius:6px; min-width:36px; text-align:center; }
+    .mockup-name { font-weight:700; font-size:0.92rem; flex:1; }
+    .mockup-dharma { font-size:0.78rem; background:#efe8dc; padding:2px 6px; border-radius:4px; color:#555; }
+
+    .badge-sm {
+      font-size: 0.75rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 14px; white-space: nowrap; flex-shrink: 0;
+    }
+    .badge-present { background: #d8f5e4; color: var(--green); border: 1px solid #74c69d; }
+    .badge-none    { background: #f0f0f0; color: #555; border: 1px solid #ccc; }
+    .badge-frozen  { background: #ffd6d6; color: #a03030; border: 1px solid #e07070; }
+
+    /* 長按按鈕示意 */
+    .hold-demo { display: flex; gap: 8px; margin: 10px 0; }
+    .hold-box {
+      flex: 1; border-radius: 12px; padding: 14px 8px;
+      text-align: center; font-size: 0.82rem; font-weight: 700; border: 2px solid;
+    }
+    .hold-box .h-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .hold-box.checkin  { background: #f8f5f0; border-color: #d8c8b0; color: #5a4a3a; }
+    .hold-box.undo     { background: #fff0f0; border-color: #ffb3b3; color: var(--red); }
+    .hold-box.freeze   { background: #fff5f5; border-color: #e07070; color: #a03030; }
+    .hold-box.unfreeze { background: #edf7f1; border-color: #74c69d; color: var(--green); }
+
+    /* 進度條動畫 */
+    .progress-demo { height: 8px; border-radius: 4px; background: #e8ddd0; margin: 8px 0; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; background: #b8a080;
+      animation: fill3s 3s linear infinite; }
+    @keyframes fill3s { 0%{width:0%} 90%{width:90%} 100%{width:100%} }
+
+    /* 流程箭頭 */
+    .flow { display: flex; flex-direction: column; gap: 0; margin: 10px 0; }
+    .flow-step {
+      background: #fff; border: 1.5px solid #c8ddd0; border-radius: 10px;
+      padding: 10px 14px; font-size: 0.88rem; font-weight: 700; color: var(--green);
+      text-align: center;
+    }
+    .flow-step.maroon { border-color: #e0c8c0; color: var(--maroon); }
+    .flow-arrow { text-align: center; color: #88b0a0; font-size: 1.2rem; line-height: 1.4; }
+
+    /* 齒輪示意 */
+    .gear-demo {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg,#fffbf3,#f3e5cc);
+      border: 1.5px solid var(--gold-border); font-size: 1.2rem;
+      vertical-align: middle; box-shadow: 0 2px 5px rgba(184,134,11,0.15);
+    }
+
+    /* 提示框 */
+    .tip {
+      background: var(--green-pale); border: 1.5px solid var(--green-border);
+      border-radius: 12px; padding: 13px 16px; margin: 10px 0;
+      font-size: 0.88rem; color: #1a4a30; line-height: 1.7;
+    }
+    .caution {
+      background: var(--red-pale); border: 1.5px solid var(--red-border);
+      border-radius: 12px; padding: 13px 16px; margin: 10px 0;
+      font-size: 0.88rem; color: #8b1010; line-height: 1.7;
+    }
+    .caution strong { color: var(--red); }
+    .warn-box {
+      background: #fff2f2; border: 2.5px solid var(--red);
+      border-radius: 14px; padding: 16px 18px; margin: 14px 0;
+    }
+    .warn-box .wb-title {
+      font-family: 'Noto Serif TC', serif; font-weight: 900;
+      color: var(--red); font-size: 1rem; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .warn-box p { font-size: 0.88rem; color: #8b1010; line-height: 1.7; }
+
+    /* 狀態表 */
+    .status-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.88rem; }
+    .status-table th {
+      background: #f0f8f4; color: var(--green); font-weight: 700;
+      padding: 9px 12px; border-bottom: 2px solid #c8ddd0; text-align: left;
+    }
+    .status-table td { padding: 9px 12px; border-bottom: 1px solid #f0e8dc; color: var(--gray); }
+    .status-table tr:last-child td { border-bottom: none; }
+
+    /* 分隔線 */
+    .part-divider { height: 6px; background: linear-gradient(90deg,var(--maroon),#d4790a,var(--green)); margin: 32px 0 0; }
+
+    /* 常見問題 */
+    .faq-card {
+      background: var(--white); border-radius: 14px;
+      border: 1.5px solid #e0d4c0; margin-bottom: 10px; overflow: hidden;
+    }
+    .faq-q {
+      background: #fdf9f3; padding: 13px 16px; font-weight: 700;
+      font-size: 0.95rem; display: flex; gap: 10px; align-items: flex-start;
+    }
+    .faq-q .q-badge {
+      background: var(--maroon); color: #fff; border-radius: 6px;
+      font-size: 0.78rem; padding: 2px 8px; font-weight: 900; flex-shrink: 0; margin-top: 2px;
+    }
+    .faq-a { padding: 12px 16px; font-size: 0.9rem; color: var(--gray); line-height: 1.75; }
+
+    /* 頁尾 */
+    footer { text-align: center; padding: 28px 18px 20px; color: #b0a090; font-size: 0.75rem; line-height: 1.8; }
+    footer .f-lotus { font-size: 1.4rem; display: block; margin-bottom: 6px; }
+
+    /* 回頂 */
+    #totop {
+      position: fixed; bottom: 20px; right: 16px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--maroon); color: #fff; border: none;
+      font-size: 1.1rem; cursor: pointer; z-index: 99;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    #totop.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- 頁首 -->
+<div class="page-header">
+  <div class="ph-icon">☸</div>
+  <h1>義工報到系統<br><span>領隊操作指南</span></h1>
+</div>
+
+<!-- 目錄 -->
+<div class="toc">
+  <div class="toc-title">📖 目錄</div>
+  <a href="#vol-part">🙋 義工篇・自助報到</a>
+  <a href="#leader-part">🌿 領隊篇・後台管理</a>
+</div>
+
+<!-- ════════════════════════════════
+     義工篇
+════════════════════════════════ -->
+<div id="vol-part" class="part-header vol">
+  <h2>🙋 義工篇</h2>
+  <p>自助報到操作說明・給所有義工</p>
+</div>
+
+<div class="body">
+
+  <!-- 認識主畫面 -->
+  <div class="sec-title green">📱 認識主畫面</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num green">①</div>
+      <div class="step-title">頁面頂部：出席統計</div>
+    </div>
+    <div class="step-body">
+      <p>開啟頁面後，頂部顯示目前整車的出席狀況，每 30 秒自動更新。</p>
+      <div class="mockup" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+        <div style="background:#fff;border-radius:8px;padding:10px 4px;border:1.5px solid #ede0cc;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--green);font-family:'Noto Serif TC',serif;">8</div>
+          <div style="font-size:0.75rem;color:#5a4020;font-weight:700;">已報到</div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:10px 4px;border:1.5px solid #ede0cc;">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--red);font-family:'Noto Serif TC',serif;">29</div>
+          <div style="font-size:0.75rem;color:#5a4020;font-weight:700;">未到</div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:10px 4px;border:1.5px solid #ede0cc;">
+          <div style="font-size:1.4rem;font-weight:900;color:#5a4020;font-family:'Noto Serif TC',serif;">37</div>
+          <div style="font-size:0.75rem;color:#5a4020;font-weight:700;">應到</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num green">②</div>
+      <div class="step-title">義工名單</div>
+    </div>
+    <div class="step-body">
+      <p>頁面中段顯示全車義工名單，每人一張卡片，依序號排列。卡片顏色代表目前狀態：</p>
+      <div class="mockup">
+        <div class="mockup-row present">
+          <div class="mockup-num">1</div>
+          <div class="mockup-name">郭旭洲 <span class="mockup-dharma">法睿</span></div>
+          <span class="badge-sm badge-present">已報到</span>
+        </div>
+        <div class="mockup-row pending">
+          <div class="mockup-num">2</div>
+          <div class="mockup-name">林靜楓 <span class="mockup-dharma">傳沂</span></div>
+          <span class="badge-sm badge-none">未到</span>
+        </div>
+        <div class="mockup-row frozen">
+          <div class="mockup-num">3</div>
+          <div class="mockup-name">熊宣涵 <span class="mockup-dharma">傳奘</span></div>
+          <span class="badge-sm badge-frozen">❄ 凍結</span>
+        </div>
+      </div>
+      <table class="status-table" style="margin-top:12px;">
+        <tr><th>卡片外觀</th><th>意思</th></tr>
+        <tr><td>深綠色外框</td><td>已完成報到</td></tr>
+        <tr><td>米黃色（一般）</td><td>尚未報到</td></tr>
+        <tr><td>淡紅色 ❄ 凍結</td><td>由領隊設定，不計入應到人數</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 自助報到步驟 -->
+  <div class="sec-title green">✅ 自助報到步驟</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num green">1</div>
+      <div class="step-title">找到自己的卡片</div>
+    </div>
+    <div class="step-body">
+      <p>在名單中找到自己的姓名卡片。可使用頁面上方的「🔍 快速跳轉」下拉選單，直接選取姓名定位。</p>
+      <div class="tip">💡 名單依序號排列，與紙本名單相同，方便對照。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num green">2</div>
+      <div class="step-title">點擊自己的卡片</div>
+    </div>
+    <div class="step-body">
+      <p>輕觸（點擊）自己的卡片，畫面下方會彈出操作視窗，顯示您的姓名、法名與目前狀態。</p>
+      <div class="caution">⚠️ 凍結狀態（❄）的卡片無法點擊報到，如有疑問請洽領隊。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num green">3</div>
+      <div class="step-title">長按三秒完成報到</div>
+    </div>
+    <div class="step-body">
+      <p>視窗中出現報到按鈕，<strong>持續按住三秒</strong>，進度條填滿後即完成報到。</p>
+      <div class="hold-demo">
+        <div class="hold-box checkin">
+          <span class="h-icon">✅</span>按三秒<br>報到
+        </div>
+      </div>
+      <p>按住後進度條逐漸填滿：</p>
+      <div class="progress-demo"><div class="progress-fill"></div></div>
+      <p>填滿後手機震動一下，表示報到成功 🎉</p>
+      <div class="tip">💡 中途放開進度條會歸零，重新按住即可。</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num green">4</div>
+      <div class="step-title">確認報到成功</div>
+    </div>
+    <div class="step-body">
+      <p>視窗關閉後，您的卡片變為<strong>深綠色外框</strong>，狀態顯示「已報到」，頂部已報到人數同步增加。</p>
+      <div class="mockup">
+        <div class="mockup-row present">
+          <div class="mockup-num">4</div>
+          <div class="mockup-name">蔡心誼 <span class="mockup-dharma">法植</span></div>
+          <span class="badge-sm badge-present">已報到</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 取消報到 -->
+  <div class="sec-title green">↩ 需要取消報到？</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num gray">!</div>
+      <div class="step-title">長按三秒取消報到</div>
+    </div>
+    <div class="step-body">
+      <p>已報到後若需取消，點擊自己的卡片，視窗中會出現「取消報到」按鈕，長按三秒即可復原為「未到」。</p>
+      <div class="hold-demo">
+        <div class="hold-box undo">
+          <span class="h-icon">↩</span>按三秒<br>取消報到
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 常見問題 -->
+  <div class="sec-title green">❓ 常見問題</div>
+
+  <div class="faq-card">
+    <div class="faq-q"><span class="q-badge">Q1</span>找不到自己的名字怎麼辦？</div>
+    <div class="faq-a">使用頁面上方「🔍 快速跳轉」下拉選單搜尋。若名單中確實沒有您的名字，請告知領隊確認。</div>
+  </div>
+
+  <div class="faq-card">
+    <div class="faq-q"><span class="q-badge">Q2</span>顯示已報到但我還沒按怎麼辦？</div>
+    <div class="faq-a">可能是領隊已代為登記報到。若狀態有誤，請告知領隊協助調整。</div>
+  </div>
+
+  <div class="faq-card">
+    <div class="faq-q"><span class="q-badge">Q3</span>點了卡片沒有反應怎麼辦？</div>
+    <div class="faq-a">
+      可能原因：<br>
+      · 卡片狀態為「❄ 凍結」→ 請洽領隊<br>
+      · 頁面尚未載入完成 → 稍候重試<br>
+      · 網路連線異常 → 確認 WiFi 或行動數據
+    </div>
+  </div>
+
+</div><!-- /義工篇 body -->
+
+<!-- 篇章分隔 -->
+<div class="part-divider"></div>
+
+<!-- ════════════════════════════════
+     領隊篇
+════════════════════════════════ -->
+<div id="leader-part" class="part-header leader">
+  <h2>⚙️ 領隊篇</h2>
+  <p>後台管理操作說明・僅供領隊使用</p>
+</div>
+
+<div class="body">
+
+  <!-- 進入後台 -->
+  <div class="sec-title maroon">🔐 進入領隊後台</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon">1</div>
+      <div class="step-title">點擊右上角齒輪按鈕</div>
+    </div>
+    <div class="step-body">
+      <p>開啟報到頁面後，點擊右上角的 <span class="gear-demo">⚙️</span> 金色圓形按鈕，進入領隊登入畫面。</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon">2</div>
+      <div class="step-title">輸入四碼領隊代碼</div>
+    </div>
+    <div class="step-body">
+      <p>輸入四位數領隊代碼，輸入滿四碼後「進入」按鈕自動亮起，點擊進入後台。</p>
+      <div class="flow">
+        <div class="flow-step maroon">點擊 ⚙️ 齒輪按鈕</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step maroon">輸入四碼領隊代碼</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step maroon">✅ 進入領隊後台</div>
+      </div>
+      <div class="tip">💡 同一次開啟頁面期間不需重複登入。重新整理頁面後需再次輸入代碼。</div>
+    </div>
+  </div>
+
+  <!-- 後台功能 -->
+  <div class="sec-title maroon">⚡ 後台功能說明</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon" style="font-size:0.85rem;">①</div>
+      <div class="step-title">出席統計</div>
+    </div>
+    <div class="step-body">
+      <p>後台頂部顯示目前已報到人數與未到人數（凍結者不計入）。</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon" style="font-size:0.85rem;">②</div>
+      <div class="step-title">快速跳轉至姓名</div>
+    </div>
+    <div class="step-body">
+      <p>使用後台中的「🔍 快速跳轉」下拉選單，直接捲動至指定義工的卡片。</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon" style="font-size:0.85rem;">③</div>
+      <div class="step-title">幫義工報到／取消報到</div>
+    </div>
+    <div class="step-body">
+      <p>找到義工卡片，長按對應按鈕三秒完成操作：</p>
+      <div class="hold-demo">
+        <div class="hold-box checkin">
+          <span class="h-icon">✅</span>按三秒<br>報到
+        </div>
+        <div class="hold-box undo">
+          <span class="h-icon">↩</span>按三秒<br>取消報到
+        </div>
+      </div>
+      <p>按住時可見進度條填滿：</p>
+      <div class="progress-demo"><div class="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon" style="font-size:0.85rem;">④</div>
+      <div class="step-title">凍結／解凍名單</div>
+    </div>
+    <div class="step-body">
+      <p>「凍結」表示該義工不計入應到人數（如已請假、提前離開）。在義工卡片下方長按 ❄ 按鈕三秒操作：</p>
+      <div class="hold-demo">
+        <div class="hold-box freeze">
+          <span class="h-icon">❄</span>按三秒<br>凍結此人
+        </div>
+        <div class="hold-box unfreeze">
+          <span class="h-icon">🔓</span>按三秒<br>解凍此人
+        </div>
+      </div>
+      <div class="tip">💡 解凍後，該義工自動恢復「未到」狀態，可重新報到。</div>
+    </div>
+  </div>
+
+  <!-- 清除記錄 -->
+  <div class="sec-title maroon">🗑 清除所有記錄</div>
+
+  <div class="warn-box">
+    <div class="wb-title">⚠️ 重要警告</div>
+    <p>「清除所有記錄」會清除<strong>全部報到記錄與凍結設定</strong>，所有人回到空白狀態，<strong>此操作無法復原</strong>。建議活動結束後再執行。</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon" style="background:var(--red);">!</div>
+      <div class="step-title">二階段確認才會清除</div>
+    </div>
+    <div class="step-body">
+      <p>點擊後台底部「🗑 清除所有記錄」，系統會彈出兩次確認對話框，均按「確定」後才執行清除。</p>
+      <div class="flow">
+        <div class="flow-step maroon">按下「🗑 清除所有記錄」</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step maroon">第一次確認 → 按「確定」</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step maroon">第二次確認 → 再按「確定」</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step maroon" style="color:var(--red);border-color:#e0c8c0;">✅ 全部清除完成</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 退出後台 -->
+  <div class="sec-title maroon">🚪 退出領隊後台</div>
+
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num maroon">3</div>
+      <div class="step-title">按底部「退出領隊後台」</div>
+    </div>
+    <div class="step-body">
+      <p>點擊後台最底部的「退出領隊後台」按鈕，即可退出並回到一般義工檢視模式。</p>
+      <div class="caution">⚠️ 退出後，其他人無法在您的手機上進入後台，除非再次輸入代碼。</div>
+    </div>
+  </div>
+
+  <!-- 凍結與取消比較 -->
+  <div class="sec-title maroon">📊 凍結 vs 取消報到</div>
+
+  <div class="step-card">
+    <div class="step-body" style="padding-top:14px;">
+      <table class="status-table">
+        <tr><th></th><th>取消報到</th><th>凍結</th></tr>
+        <tr><td>計入應到</td><td>✅ 計入</td><td>❌ 不計入</td></tr>
+        <tr><td>誰能操作</td><td>義工或領隊</td><td>僅領隊</td></tr>
+        <tr><td>適用情境</td><td>臨時無法出席</td><td>不在本次名單內</td></tr>
+        <tr><td>可恢復</td><td>✅ 可重新報到</td><td>✅ 可解除凍結</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /領隊篇 body -->
+
+<footer>
+  <span class="f-lotus">☸</span>
+  0524 浴佛法會 第 12 車<br>
+  義工報到系統操作指南 · AQE@2026
+</footer>
+
+<button id="totop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('totop').classList.toggle('show', window.scrollY > 200);
+});
+</script>
+</body>
+</html>
