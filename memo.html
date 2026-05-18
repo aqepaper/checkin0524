@@ -207,32 +207,44 @@ main { padding: 0.6rem 0.2rem 5rem; }
 .sec-strip { height: 5px; background: var(--green-light); }
 
 .sec-head {
-  padding: 0.85rem 1rem 0.8rem;
-  display: flex; align-items: flex-start; gap: 0.6rem;
+  padding: 0.8rem 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
-.sec-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.2rem; }
-.sec-texts { flex: 1; min-width: 0; }
+/* 第一列：編號 ＋ 圖示 ＋ 完成章 ＋ 書籤 */
+.sec-head-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+.sec-icon { font-size: 1.3rem; flex-shrink: 0; }
+.sec-head-spacer { flex: 1; }
+/* 第二列：時間標籤 */
 .sec-date {
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   background: #fff3cd;
   color: #856404;
-  padding: 0.15rem 0.5rem;
+  padding: 0.18rem 0.55rem;
   border-radius: 4px;
-  display: block;
-  margin-bottom: 0.25rem;
+  display: inline-block;
   line-height: 1.5;
-  white-space: normal;
+  margin-bottom: 0.3rem;
+  align-self: flex-start;
+  max-width: 100%;
   word-break: keep-all;
 }
+/* 第三列：段落標題 */
 .sec-title {
   font-family: 'Noto Serif TC', serif;
   font-size: 1.1rem; font-weight: 900;
-  color: var(--ink); line-height: 1.3;
+  color: var(--ink); line-height: 1.35;
   letter-spacing: 0.02em;
 }
 .sec.all-done .sec-title { color: var(--green); }
+.sec-texts { display: contents; }
 .done-badge {
   display: none;
   background: var(--green);
@@ -354,15 +366,15 @@ main { padding: 0.6rem 0.2rem 5rem; }
 .cl { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
 
 .cl-item {
-  display: flex; align-items: flex-start; gap: 0.85rem;
+  display: flex; align-items: flex-start; gap: 0.6rem;
   background: var(--bg);
   border: 2px solid var(--border);
   border-radius: 10px;
-  padding: 0.9rem 0.95rem;
+  padding: 0.85rem 0.9rem;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   -webkit-user-select: none; user-select: none;
-  min-height: 58px;
+  min-height: 56px;
 }
 .cl-item:active { background: var(--green-pale); }
 .cl-item.ck { background: #edf8f1; border-color: var(--border-done); }
@@ -373,17 +385,23 @@ main { padding: 0.6rem 0.2rem 5rem; }
   border-radius: 8px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   background: #fff;
-  transition: all 0.18s; margin-top: 0.1rem;
+  transition: all 0.18s; margin-top: 0.08rem;
 }
 .cl-item.ck .cb { background: var(--green); border-color: var(--green); }
 .cl-item.ck .cb::after { content: '✓'; color: #fff; font-size: 1.2rem; font-weight: 900; line-height: 1; }
 
+/* 重要性標點：緊鄰勾選框右側，小而不占空間 */
+.imp {
+  font-size: 0.72rem;
+  flex-shrink: 0;
+  margin-top: 0.28rem;
+  line-height: 1;
+}
+
 .cl-text {
-  flex: 1; font-size: 1rem; color: var(--ink); line-height: 1.55;
+  flex: 1; font-size: 1rem; color: var(--ink); line-height: 1.55; min-width: 0;
 }
 .cl-item.ck .cl-text { color: var(--ink-mute); text-decoration: line-through; text-decoration-color: var(--green-light); }
-
-.imp { font-size: 0.9rem; flex-shrink: 0; margin-top: 0.22rem; }
 
 /* role badges */
 .rb {
@@ -444,32 +462,33 @@ main { padding: 0.6rem 0.2rem 5rem; }
 .nine-txt strong { display: block; font-size: 0.88rem; color: var(--green); line-height: 1.3; }
 .nine-txt span { font-size: 0.79rem; color: var(--ink-soft); line-height: 1.35; }
 
-/* ── MAT TABLE → 手機條列卡片 ── */
-.mat-list { list-style: none; margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0; border: 2px solid var(--border); border-radius: 9px; overflow: hidden; }
-.mat-head {
-  display: flex; align-items: center;
-  background: var(--green); padding: 0.5rem 0.9rem; gap: 0.6rem;
+/* ── 物料純條列 ── */
+.mat-plain { list-style: none; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0; }
+.mat-plain-head {
+  display: flex; gap: 0.5rem; align-items: center;
+  padding: 0.4rem 0.5rem;
+  background: var(--green);
+  border-radius: 6px 6px 0 0;
+  font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;
 }
-.mat-head span { color: #fff; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; }
-.mat-head .mh-no  { width: 1.8rem; flex-shrink: 0; }
-.mat-head .mh-name { flex: 1; }
-.mat-head .mh-qty  { width: 2.8rem; flex-shrink: 0; text-align: center; }
-.mat-head .mh-tag  { width: 4.8rem; flex-shrink: 0; text-align: center; }
-
-.mat-row {
-  display: flex; align-items: center;
-  padding: 0.65rem 0.9rem; gap: 0.6rem;
+.mat-plain-head .mph-no  { width: 1.6rem; flex-shrink: 0; }
+.mat-plain-head .mph-name { flex: 1; }
+.mat-plain-head .mph-qty  { width: 2.4rem; flex-shrink: 0; text-align: right; }
+.mat-plain-head .mph-tag  { width: 4rem; flex-shrink: 0; text-align: center; }
+.mat-plain-row {
+  display: flex; gap: 0.5rem; align-items: center;
+  padding: 0.48rem 0.5rem;
   border-bottom: 1px solid var(--border);
-  font-size: 0.92rem;
+  font-size: 0.82rem;
 }
-.mat-row:last-child { border-bottom: none; }
-.mat-row:nth-child(even) { background: var(--bg); }
-.mr-no   { width: 1.8rem; flex-shrink: 0; color: var(--ink-mute); font-size: 0.82rem; }
-.mr-name { flex: 1; color: var(--ink); font-weight: 500; line-height: 1.4; }
-.mr-qty  { width: 2.8rem; flex-shrink: 0; text-align: center; color: var(--ink-soft); font-weight: 700; }
-.mr-tag  { width: 4.8rem; flex-shrink: 0; text-align: center; }
-.tag-p { background: #ffe0ec; color: #8b0040; border: 1px solid #e0a0c0; border-radius: 4px; padding: 0.15rem 0.3rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap; display: inline-block; }
-.tag-b { background: #d0e8ff; color: #003a70; border: 1px solid #90c0f0; border-radius: 4px; padding: 0.15rem 0.3rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap; display: inline-block; }
+.mat-plain-row:last-child { border-bottom: none; border-radius: 0 0 6px 6px; }
+.mat-plain-row:nth-child(even) { background: var(--bg); }
+.mpr-no   { width: 1.6rem; flex-shrink: 0; color: var(--ink-mute); font-size: 0.76rem; }
+.mpr-name { flex: 1; color: var(--ink); line-height: 1.35; font-size: 0.82rem; }
+.mpr-qty  { width: 2.4rem; flex-shrink: 0; text-align: right; color: var(--ink-soft); font-weight: 700; font-size: 0.82rem; }
+.mpr-tag  { width: 4rem; flex-shrink: 0; text-align: center; }
+.tag-p { background: #ffe0ec; color: #8b0040; border: 1px solid #e0a0c0; border-radius: 4px; padding: 0.1rem 0.25rem; font-size: 0.68rem; font-weight: 700; white-space: nowrap; display: inline-block; }
+.tag-b { background: #d0e8ff; color: #003a70; border: 1px solid #90c0f0; border-radius: 4px; padding: 0.1rem 0.25rem; font-size: 0.68rem; font-weight: 700; white-space: nowrap; display: inline-block; }
 
 /* ════════════════════════════════════
    FINAL CHECKLIST
@@ -736,22 +755,23 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s1">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">1</div>
-    <div class="sec-icon">📞</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 5/19（二）12:00 前</div>
-      <div class="sec-title">電聯作業</div>
+    <div class="sec-head-top">
+      <div class="sec-num">1</div>
+      <div class="sec-icon">📞</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s1" onclick="tapPin(event,'s1')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s1" onclick="tapPin(event,'s1')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 5/19（二）12:00 前</div>
+    <div class="sec-title">電聯作業</div>
   </div>
   <div class="sec-body">
     <div class="alert a-warn"><span class="ai">⏰</span><span>5/19 中午 12:00 前完成，並<strong>回報各大隊長</strong></span></div>
     <ul class="cl" data-sec="s1">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>電話聯繫每位學員，完整告知九項事宜</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>確認學員已知道自己在車隊 LINE 群組內</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>完成後回報各大隊長</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>12:00 後有異動填寫小單</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>電話聯繫每位學員，完整告知九項事宜</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>確認學員已知道自己在車隊 LINE 群組內</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>完成後回報各大隊長</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>12:00 後有異動填寫小單</div></li>
     </ul>
     <div class="sub-block">
       <div class="sub-title">📋 電聯九項事宜（細項）</div>
@@ -774,40 +794,41 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s2">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">2</div>
-    <div class="sec-icon">📦</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 5/21（四）19:00</div>
-      <div class="sec-title">物料整理與領取</div>
+    <div class="sec-head-top">
+      <div class="sec-num">2</div>
+      <div class="sec-icon">📦</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s2" onclick="tapPin(event,'s2')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s2" onclick="tapPin(event,'s2')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 5/21（四）19:00</div>
+    <div class="sec-title">物料整理與領取</div>
   </div>
   <div class="sec-body">
     <ul class="cl" data-sec="s2">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>前往領取全車物料，逐項清點</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>來賓證裁切裝套</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>整理行李吊牌</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>確認出車表、安單表</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">全體</span>出席二次集結會議</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>前往領取全車物料，逐項清點</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>來賓證裁切裝套</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>整理行李吊牌</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>確認出車表、安單表</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rX">全體</span>出席二次集結會議</div></li>
     </ul>
     <div class="sub-block">
       <div class="sub-title">📦 物料清點清單（含歸還方式）</div>
-      <ul class="mat-list">
-        <li class="mat-head"><span class="mh-no">#</span><span class="mh-name">物品</span><span class="mh-qty">數量</span><span class="mh-tag">歸還</span></li>
-        <li class="mat-row"><span class="mr-no">1</span><span class="mr-name">環保袋（粉色）</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">2</span><span class="mr-name">環保袋（藍色）</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">3</span><span class="mr-name">領隊背心（藍色）</span><span class="mr-qty">3</span><span class="mr-tag"><span class="tag-b">清洗藍色</span></span></li>
-        <li class="mat-row"><span class="mr-no">4</span><span class="mr-name">背心（黃色）</span><span class="mr-qty">37</span><span class="mr-tag"><span class="tag-b">清洗藍色</span></span></li>
-        <li class="mat-row"><span class="mr-no">5</span><span class="mr-name">識別帶</span><span class="mr-qty">40</span><span class="mr-tag"><span class="tag-b">清洗藍色</span></span></li>
-        <li class="mat-row"><span class="mr-no">6</span><span class="mr-name">派司套</span><span class="mr-qty">40</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">7</span><span class="mr-name">舉牌</span><span class="mr-qty">2</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">8</span><span class="mr-name">心經儀軌</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">9</span><span class="mr-name">A4版夾</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">10</span><span class="mr-name">原子筆</span><span class="mr-qty">2</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">11</span><span class="mr-name">酒精</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">12</span><span class="mr-name">醫藥箱</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
-        <li class="mat-row"><span class="mr-no">13</span><span class="mr-name">輪胎紋檢測器</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+      <ul class="mat-plain" style="border:2px solid var(--border);border-radius:8px;overflow:hidden;">
+        <li class="mat-plain-head"><span class="mph-no">#</span><span class="mph-name">物品名稱</span><span class="mph-qty">數量</span><span class="mph-tag">歸還方式</span></li>
+        <li class="mat-plain-row"><span class="mpr-no">1</span><span class="mpr-name">環保袋（粉色）</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">2</span><span class="mpr-name">環保袋（藍色）</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">3</span><span class="mpr-name">領隊背心（藍色）</span><span class="mpr-qty">3</span><span class="mpr-tag"><span class="tag-b">清洗藍色</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">4</span><span class="mpr-name">背心（黃色）</span><span class="mpr-qty">37</span><span class="mpr-tag"><span class="tag-b">清洗藍色</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">5</span><span class="mpr-name">識別帶</span><span class="mpr-qty">40</span><span class="mpr-tag"><span class="tag-b">清洗藍色</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">6</span><span class="mpr-name">派司套</span><span class="mpr-qty">40</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">7</span><span class="mpr-name">舉牌</span><span class="mpr-qty">2</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">8</span><span class="mpr-name">心經儀軌</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">9</span><span class="mpr-name">A4版夾</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">10</span><span class="mpr-name">原子筆</span><span class="mpr-qty">2</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">11</span><span class="mpr-name">酒精</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">12</span><span class="mpr-name">醫藥箱</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-plain-row"><span class="mpr-no">13</span><span class="mpr-name">輪胎紋檢測器</span><span class="mpr-qty">1</span><span class="mpr-tag"><span class="tag-p">清消粉紅</span></span></li>
       </ul>
     </div>
   </div>
@@ -817,36 +838,37 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s3">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">3</div>
-    <div class="sec-icon">🚌</div>
-    <div class="sec-texts">
-      <div class="sec-date">B/C大隊 5/23 14:40集合・15:00發車<br>A大隊　5/24 04:15集合・04:30發車</div>
-      <div class="sec-title">發車前 — 三項必確認</div>
+    <div class="sec-head-top">
+      <div class="sec-num">3</div>
+      <div class="sec-icon">🚌</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s3" onclick="tapPin(event,'s3')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s3" onclick="tapPin(event,'s3')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">B/C 5/23 14:40集合・15:00發車<br>A　　5/24 04:15集合・04:30發車</div>
+    <div class="sec-title">發車前 — 三項必確認</div>
   </div>
   <div class="sec-body">
     <div class="alert a-red"><span class="ai">🚨</span><span><strong>逾時不候</strong>，準時發車！</span></div>
     <div class="divider">01 遊覽車</div>
     <ul class="cl" data-sec="s3">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>確認遊覽車停放位置</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>執行大客車檢查表（含輪胎紋檢測）</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>確認遊覽車停放位置</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>執行大客車檢查表（含輪胎紋檢測）</div></li>
     </ul>
     <div class="divider">02 人員到位</div>
     <ul class="cl" data-sec="s3">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>確認三人核心組均已到位各司其職</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>逐一點名學員</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>主動聯繫尚未抵達的學員</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>發放黃色背心、來賓證</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>確認三人核心組均已到位各司其職</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>逐一點名學員</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>主動聯繫尚未抵達的學員</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>發放黃色背心、來賓證</div></li>
     </ul>
     <div class="divider">03 車上物料</div>
     <ul class="cl" data-sec="s3">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>確認舉牌、車前牌備妥</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>確認早齋、水備妥</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>確認待轉運物品備妥</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>人員到齊拉班上車，上車後再次點名</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>到齊回報群組，<strong>聽動令發車</strong></div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>確認舉牌、車前牌備妥</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>確認早齋、水備妥</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>確認待轉運物品備妥</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>人員到齊拉班上車，上車後再次點名</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>到齊回報群組，<strong>聽動令發車</strong></div></li>
     </ul>
   </div>
 </div>
@@ -855,28 +877,29 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s4">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">4</div>
-    <div class="sec-icon">🎙️</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 發車後・車上</div>
-      <div class="sec-title">發車後 — 車上依序執行</div>
+    <div class="sec-head-top">
+      <div class="sec-num">4</div>
+      <div class="sec-icon">🎙️</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s4" onclick="tapPin(event,'s4')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s4" onclick="tapPin(event,'s4')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 發車後・車上</div>
+    <div class="sec-title">發車後 — 車上依序執行</div>
   </div>
   <div class="sec-body">
     <div class="alert a-warn"><span class="ai">⏱</span><span>發車後 <strong>10 分鐘內</strong>完成雲端回報（實際出席人數）</span></div>
     <ul class="cl" data-sec="s4">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">① <span class="rb rL">領隊</span>介紹隨車法師</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">② <span class="rb rL">領隊</span>介紹領隊／副領隊／司機及車號</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">③ <span class="rb rL">領隊</span>發心經儀軌</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">④ <span class="rb rL">領隊</span>帶領早課／定課</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">⑤ <span class="rb rA">副A</span>發早齋及水</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">⑥ <span class="rb rL">領隊</span>播放大客車安全逃生影片</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">⑦ <span class="rb rL">領隊</span>完整布達精舍須知七項（見細項）</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">⑧ <span class="rb rL">領隊</span>完整布達掛單須知（止／行規約）</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">⑨ <span class="rb rL">領隊</span>持續注意 LINE 訊息並提醒學員</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text">⑩ <span class="rb rL">領隊</span>發車後 10 分鐘內，雲端回報實際出席人數</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">① <span class="rb rL">領隊</span>介紹隨車法師</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">② <span class="rb rL">領隊</span>介紹領隊／副領隊／司機及車號</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">③ <span class="rb rL">領隊</span>發心經儀軌</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">④ <span class="rb rL">領隊</span>帶領早課／定課</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">⑤ <span class="rb rA">副A</span>發早齋及水</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">⑥ <span class="rb rL">領隊</span>播放大客車安全逃生影片</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">⑦ <span class="rb rL">領隊</span>完整布達精舍須知七項（見細項）</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">⑧ <span class="rb rL">領隊</span>完整布達掛單須知（止／行規約）</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text">⑨ <span class="rb rL">領隊</span>持續注意 LINE 訊息並提醒學員</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text">⑩ <span class="rb rL">領隊</span>發車後 10 分鐘內，雲端回報實際出席人數</div></li>
     </ul>
     <div class="sub-block">
       <div class="sub-title">🏯 精舍須知七項（布達內容）</div>
@@ -910,35 +933,36 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s5">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">5</div>
-    <div class="sec-icon">🛣️</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 行車途中</div>
-      <div class="sec-title">行車 ＋ 休息站 ＋ 下國道六號</div>
+    <div class="sec-head-top">
+      <div class="sec-num">5</div>
+      <div class="sec-icon">🛣️</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s5" onclick="tapPin(event,'s5')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s5" onclick="tapPin(event,'s5')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 行車途中</div>
+    <div class="sec-title">行車 ＋ 休息站 ＋ 下國道六號</div>
   </div>
   <div class="sec-body">
     <div class="divider">行車途中</div>
     <ul class="cl" data-sec="s5">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>關心行駛情況與司機狀態</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>關心學員狀況，異狀即時回報總領隊</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>車內穿插關照學員威儀狀態</div><div class="imp">🟡</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rL">領隊</span>關心行駛情況與司機狀態</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rL">領隊</span>關心學員狀況，異狀即時回報總領隊</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rB">副B</span>車內穿插關照學員威儀狀態</div></li>
     </ul>
     <div class="divider">休息站</div>
     <ul class="cl" data-sec="s5">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>停靠前告知：車號、車次、停留時間、發車時間</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>提醒勿買、勿帶葷食上車；垃圾帶下車</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>車外舉牌，方便學員找到本車</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>逐一點名（不可只點人頭），到齊後回報群組</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>⚠️ <strong>去程</strong>須告知司機等統一動令，不自行發車</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>停靠前告知：車號、車次、停留時間、發車時間</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>提醒勿買、勿帶葷食上車；垃圾帶下車</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rB">副B</span>車外舉牌，方便學員找到本車</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>逐一點名（不可只點人頭），到齊後回報群組</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>⚠️ <strong>去程</strong>須告知司機等統一動令，不自行發車</div></li>
     </ul>
     <div class="divider">下國道六號</div>
     <ul class="cl" data-sec="s5">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>在車前張貼車前牌</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>提醒學員個人物品隨身攜帶</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>告知司機山上送便當，請在車上等（11:00–12:00 交通組發放）</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>在車前張貼車前牌</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>提醒學員個人物品隨身攜帶</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>告知司機山上送便當，請在車上等（11:00–12:00 交通組發放）</div></li>
     </ul>
   </div>
 </div>
@@ -947,23 +971,24 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s6">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">6</div>
-    <div class="sec-icon">🏯</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 抵達中台山</div>
-      <div class="sec-title">下車整隊 → 進入休息區</div>
+    <div class="sec-head-top">
+      <div class="sec-num">6</div>
+      <div class="sec-icon">🏯</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s6" onclick="tapPin(event,'s6')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s6" onclick="tapPin(event,'s6')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 抵達中台山</div>
+    <div class="sec-title">下車整隊 → 進入休息區</div>
   </div>
   <div class="sec-body">
     <ul class="cl" data-sec="s6">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">全體</span>帶領學員快速整隊，<strong>二人一排</strong></div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>走在車隊最前方帶領</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>末端壓班，確保無人脫隊</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>穿插中間關照</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>引導順班、關照威儀、護念年長者</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">全體</span>協助引導學員進入休息區入坐</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rX">全體</span>帶領學員快速整隊，<strong>二人一排</strong></div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>走在車隊最前方帶領</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rB">副B</span>末端壓班，確保無人脫隊</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>穿插中間關照</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rB">副B</span>引導順班、關照威儀、護念年長者</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rX">全體</span>協助引導學員進入休息區入坐</div></li>
     </ul>
   </div>
 </div>
@@ -972,30 +997,31 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s7">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">7</div>
-    <div class="sec-icon">🙏</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 法會期間</div>
-      <div class="sec-title">法會進行中 ＋ 集結回程</div>
+    <div class="sec-head-top">
+      <div class="sec-num">7</div>
+      <div class="sec-icon">🙏</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s7" onclick="tapPin(event,'s7')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s7" onclick="tapPin(event,'s7')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 法會期間</div>
+    <div class="sec-title">法會進行中 ＋ 集結回程</div>
   </div>
   <div class="sec-body">
     <div class="divider">法會進行中</div>
     <ul class="cl" data-sec="s7">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">三人</span>坐在休息區<strong>側邊</strong>座位，方便隨時關照</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span><span class="rb rA">副A</span>關照學員是否拿到經書，可找心燈協助</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>持續注意 LINE 訊息並提醒學員</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>聽動令後找法務或總領隊領取便當</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>引導學員垃圾分類；便當多或不足告知總領隊</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>⭐ <strong>12:30</strong> 集合正授三皈五戒學員，引導至指定地點</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rX">三人</span>坐在休息區<strong>側邊</strong>座位，方便隨時關照</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rL">領隊</span><span class="rb rA">副A</span>關照學員是否拿到經書，可找心燈協助</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rL">領隊</span>持續注意 LINE 訊息並提醒學員</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>聽動令後找法務或總領隊領取便當</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rB">副B</span>引導學員垃圾分類；便當多或不足告知總領隊</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>⭐ <strong>12:30</strong> 集合正授三皈五戒學員，引導至指定地點</div></li>
     </ul>
     <div class="divider">集結回程</div>
     <ul class="cl" data-sec="s7">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>注意 LINE 動向，適時集結學員</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>逐一點名，未到者立即致電</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>到齊後回報大隊長</div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>注意 LINE 動向，適時集結學員</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>逐一點名，未到者立即致電</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>到齊後回報大隊長</div></li>
     </ul>
   </div>
 </div>
@@ -1004,23 +1030,24 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s8">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">8</div>
-    <div class="sec-icon">🏠</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 回程</div>
-      <div class="sec-title">回程途中職責</div>
+    <div class="sec-head-top">
+      <div class="sec-num">8</div>
+      <div class="sec-icon">🏠</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s8" onclick="tapPin(event,'s8')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s8" onclick="tapPin(event,'s8')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 回程</div>
+    <div class="sec-title">回程途中職責</div>
   </div>
   <div class="sec-body">
     <ul class="cl" data-sec="s8">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>回程休息站：車外舉牌</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>回程休息站：逐一點名（不可只點人頭）</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>決定古坑或東山休息站，回報群組</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>發車後收回學員名牌、背心</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>安排學員歡喜法布施（心得分享）</div><div class="imp">🟢</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>下交流道提醒學員帶走個人物品及垃圾</div><div class="imp">🟡</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rB">副B</span>回程休息站：車外舉牌</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>回程休息站：逐一點名（不可只點人頭）</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rL">領隊</span>決定古坑或東山休息站，回報群組</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>發車後收回學員名牌、背心</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟢</div><div class="cl-text"><span class="rb rL">領隊</span>安排學員歡喜法布施（心得分享）</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rL">領隊</span>下交流道提醒學員帶走個人物品及垃圾</div></li>
     </ul>
   </div>
 </div>
@@ -1029,20 +1056,21 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s9">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">9</div>
-    <div class="sec-icon">⛩️</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 返抵精舍</div>
-      <div class="sec-title">抵達精舍後續作業</div>
+    <div class="sec-head-top">
+      <div class="sec-num">9</div>
+      <div class="sec-icon">⛩️</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s9" onclick="tapPin(event,'s9')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s9" onclick="tapPin(event,'s9')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 返抵精舍</div>
+    <div class="sec-title">抵達精舍後續作業</div>
   </div>
   <div class="sec-body">
     <ul class="cl" data-sec="s9">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>下車前感謝司機</div><div class="imp">🟢</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rB">副B</span>巡查車廂有無學員遺留物品</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">三人</span>⚠️ <strong>須留在精舍處理後續，不可先行離開</strong></div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟢</div><div class="cl-text"><span class="rb rL">領隊</span>下車前感謝司機</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rB">副B</span>巡查車廂有無學員遺留物品</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rX">三人</span>⚠️ <strong>須留在精舍處理後續，不可先行離開</strong></div></li>
     </ul>
   </div>
 </div>
@@ -1051,35 +1079,36 @@ main { padding: 0.6rem 0.2rem 5rem; }
 <div class="sec" id="s10">
   <div class="sec-strip"></div>
   <div class="sec-head">
-    <div class="sec-num">10</div>
-    <div class="sec-icon">📋</div>
-    <div class="sec-texts">
-      <div class="sec-date">📅 最後任務</div>
-      <div class="sec-title">物料歸還 — 清消 ＆ 洗滌</div>
+    <div class="sec-head-top">
+      <div class="sec-num">10</div>
+      <div class="sec-icon">📋</div>
+      <div class="sec-head-spacer"></div>
+      <span class="done-badge">✓ 完成</span>
+      <button class="pin-btn" id="pin-s10" onclick="tapPin(event,'s10')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
     </div>
-    <span class="done-badge">✓ 完成</span>
-    <button class="pin-btn" id="pin-s10" onclick="tapPin(event,'s10')" title="點此設定書籤"><span class="pin-icon">📌</span><span class="pin-label">書籤</span></button>
+    <div class="sec-date">📅 最後任務</div>
+    <div class="sec-title">物料歸還 — 清消 ＆ 洗滌</div>
   </div>
   <div class="sec-body">
     <div class="divider">🩷 清消組（項次 6–14）</div>
     <ul class="cl" data-sec="s10">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>酒精均勻噴灑硬體物料</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>擦拭並靜置晾乾</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>點交數量裝入<strong>粉紅色環保袋</strong></div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>酒精均勻噴灑硬體物料</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>擦拭並靜置晾乾</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>點交數量裝入<strong>粉紅色環保袋</strong></div></li>
     </ul>
     <div class="divider">💙 洗滌組（項次 1–5）</div>
     <ul class="cl" data-sec="s10">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>主動尋找發心清洗志工</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>裝入<strong>藍色環保袋</strong></div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>於「領隊團收執聯」填寫清洗人<strong>姓名與電話</strong></div><div class="imp">🔴</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>主動尋找發心清洗志工</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>裝入<strong>藍色環保袋</strong></div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rA">副A</span>於「領隊團收執聯」填寫清洗人<strong>姓名與電話</strong></div></li>
     </ul>
     <div class="divider">歸還表單</div>
     <ul class="cl" data-sec="s10">
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rA">副A</span>確認背心摺疊時「普高 Logo」朝上疊放</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>填寫物料歸還小單（物件、數量、車次）</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rL">領隊</span>照客簽收確認</div><div class="imp">🔴</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">全體</span>進行本次活動檢討及回饋</div><div class="imp">🟡</div></li>
-      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">三人</span>自行禮佛告假</div><div class="imp">🟢</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rA">副A</span>確認背心摺疊時「普高 Logo」朝上疊放</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>填寫物料歸還小單（物件、數量、車次）</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🔴</div><div class="cl-text"><span class="rb rL">領隊</span>照客簽收確認</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟡</div><div class="cl-text"><span class="rb rX">全體</span>進行本次活動檢討及回饋</div></li>
+      <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="imp">🟢</div><div class="cl-text"><span class="rb rX">三人</span>自行禮佛告假</div></li>
     </ul>
   </div>
 </div>
