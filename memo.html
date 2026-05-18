@@ -207,22 +207,24 @@ main { padding: 0.6rem 0.2rem 5rem; }
 .sec-strip { height: 5px; background: var(--green-light); }
 
 .sec-head {
-  padding: 0.95rem 1.1rem 0.85rem;
-  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.85rem 1rem 0.8rem;
+  display: flex; align-items: flex-start; gap: 0.6rem;
 }
-.sec-icon { font-size: 1.4rem; flex-shrink: 0; }
-.sec-texts { flex: 1; }
+.sec-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.2rem; }
+.sec-texts { flex: 1; min-width: 0; }
 .sec-date {
-  font-size: 0.85rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   background: #fff3cd;
   color: #856404;
-  padding: 0.1rem 0.45rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 4px;
-  display: inline-block;
-  margin-bottom: 0.2rem;
-  line-height: 1.4;
+  display: block;
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+  white-space: normal;
+  word-break: keep-all;
 }
 .sec-title {
   font-family: 'Noto Serif TC', serif;
@@ -442,15 +444,32 @@ main { padding: 0.6rem 0.2rem 5rem; }
 .nine-txt strong { display: block; font-size: 0.88rem; color: var(--green); line-height: 1.3; }
 .nine-txt span { font-size: 0.79rem; color: var(--ink-soft); line-height: 1.35; }
 
-/* ── MAT TABLE ── */
-.mat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 0.5rem; border-radius: 9px; border: 2px solid var(--border); }
-.mat-tbl { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-.mat-tbl th { background: var(--green); color: #fff; padding: 0.55rem 0.75rem; text-align: left; font-size: 0.82rem; letter-spacing: 0.04em; }
-.mat-tbl td { padding: 0.7rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-.mat-tbl tr:last-child td { border-bottom: none; }
-.mat-tbl tr:nth-child(even) td { background: var(--bg); }
-.tag-p { background: #ffe0ec; color: #8b0040; border: 1px solid #e0a0c0; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.76rem; font-weight: 700; white-space: nowrap; }
-.tag-b { background: #d0e8ff; color: #003a70; border: 1px solid #90c0f0; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.76rem; font-weight: 700; white-space: nowrap; }
+/* ── MAT TABLE → 手機條列卡片 ── */
+.mat-list { list-style: none; margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0; border: 2px solid var(--border); border-radius: 9px; overflow: hidden; }
+.mat-head {
+  display: flex; align-items: center;
+  background: var(--green); padding: 0.5rem 0.9rem; gap: 0.6rem;
+}
+.mat-head span { color: #fff; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; }
+.mat-head .mh-no  { width: 1.8rem; flex-shrink: 0; }
+.mat-head .mh-name { flex: 1; }
+.mat-head .mh-qty  { width: 2.8rem; flex-shrink: 0; text-align: center; }
+.mat-head .mh-tag  { width: 4.8rem; flex-shrink: 0; text-align: center; }
+
+.mat-row {
+  display: flex; align-items: center;
+  padding: 0.65rem 0.9rem; gap: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+.mat-row:last-child { border-bottom: none; }
+.mat-row:nth-child(even) { background: var(--bg); }
+.mr-no   { width: 1.8rem; flex-shrink: 0; color: var(--ink-mute); font-size: 0.82rem; }
+.mr-name { flex: 1; color: var(--ink); font-weight: 500; line-height: 1.4; }
+.mr-qty  { width: 2.8rem; flex-shrink: 0; text-align: center; color: var(--ink-soft); font-weight: 700; }
+.mr-tag  { width: 4.8rem; flex-shrink: 0; text-align: center; }
+.tag-p { background: #ffe0ec; color: #8b0040; border: 1px solid #e0a0c0; border-radius: 4px; padding: 0.15rem 0.3rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap; display: inline-block; }
+.tag-b { background: #d0e8ff; color: #003a70; border: 1px solid #90c0f0; border-radius: 4px; padding: 0.15rem 0.3rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap; display: inline-block; }
 
 /* ════════════════════════════════════
    FINAL CHECKLIST
@@ -773,25 +792,23 @@ main { padding: 0.6rem 0.2rem 5rem; }
       <li class="cl-item" onclick="tap(this)"><div class="cb"></div><div class="cl-text"><span class="rb rX">全體</span>出席二次集結會議</div><div class="imp">🔴</div></li>
     </ul>
     <div class="sub-block">
-      <div class="sub-title">📋 物料清點清單（含歸還方式）</div>
-      <div class="mat-scroll">
-        <table class="mat-tbl">
-          <tr><th>#</th><th>物品</th><th>數量</th><th>歸還</th></tr>
-          <tr><td>1</td><td>環保袋（粉色）</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>2</td><td>環保袋（藍色）</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>3</td><td>領隊背心（藍色）</td><td>3</td><td><span class="tag-b">清洗藍色</span></td></tr>
-          <tr><td>4</td><td>背心（黃色）</td><td>37</td><td><span class="tag-b">清洗藍色</span></td></tr>
-          <tr><td>5</td><td>識別帶</td><td>40</td><td><span class="tag-b">清洗藍色</span></td></tr>
-          <tr><td>6</td><td>派司套</td><td>40</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>7</td><td>舉牌</td><td>2</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>8</td><td>心經儀軌</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>9</td><td>A4版夾</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>10</td><td>原子筆</td><td>2</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>11</td><td>酒精</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>12</td><td>醫藥箱</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-          <tr><td>13</td><td>輪胎紋檢測器</td><td>1</td><td><span class="tag-p">清消粉紅</span></td></tr>
-        </table>
-      </div>
+      <div class="sub-title">📦 物料清點清單（含歸還方式）</div>
+      <ul class="mat-list">
+        <li class="mat-head"><span class="mh-no">#</span><span class="mh-name">物品</span><span class="mh-qty">數量</span><span class="mh-tag">歸還</span></li>
+        <li class="mat-row"><span class="mr-no">1</span><span class="mr-name">環保袋（粉色）</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">2</span><span class="mr-name">環保袋（藍色）</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">3</span><span class="mr-name">領隊背心（藍色）</span><span class="mr-qty">3</span><span class="mr-tag"><span class="tag-b">清洗藍色</span></span></li>
+        <li class="mat-row"><span class="mr-no">4</span><span class="mr-name">背心（黃色）</span><span class="mr-qty">37</span><span class="mr-tag"><span class="tag-b">清洗藍色</span></span></li>
+        <li class="mat-row"><span class="mr-no">5</span><span class="mr-name">識別帶</span><span class="mr-qty">40</span><span class="mr-tag"><span class="tag-b">清洗藍色</span></span></li>
+        <li class="mat-row"><span class="mr-no">6</span><span class="mr-name">派司套</span><span class="mr-qty">40</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">7</span><span class="mr-name">舉牌</span><span class="mr-qty">2</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">8</span><span class="mr-name">心經儀軌</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">9</span><span class="mr-name">A4版夾</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">10</span><span class="mr-name">原子筆</span><span class="mr-qty">2</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">11</span><span class="mr-name">酒精</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">12</span><span class="mr-name">醫藥箱</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+        <li class="mat-row"><span class="mr-no">13</span><span class="mr-name">輪胎紋檢測器</span><span class="mr-qty">1</span><span class="mr-tag"><span class="tag-p">清消粉紅</span></span></li>
+      </ul>
     </div>
   </div>
 </div>
@@ -803,7 +820,7 @@ main { padding: 0.6rem 0.2rem 5rem; }
     <div class="sec-num">3</div>
     <div class="sec-icon">🚌</div>
     <div class="sec-texts">
-      <div class="sec-date">📅 B/C 5/23 14:40集合 15:00發車 ｜ A 5/24 04:15集合 04:30發車</div>
+      <div class="sec-date">B/C大隊 5/23 14:40集合・15:00發車<br>A大隊　5/24 04:15集合・04:30發車</div>
       <div class="sec-title">發車前 — 三項必確認</div>
     </div>
     <span class="done-badge">✓ 完成</span>
