@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>0524 各組義工上線時間</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eaf6ef;
+  --white:#fff;
+  --ink:#1a2e20;
+  --ink-s:#2e4a34;
+  --ink-m:#4a6152;
+  --green:#1f5335;
+  --green-l:#4aaa66;
+  --green-p:#c8ecd4;
+  --border:#b8d8c4;
+  --sep:#d0e8da;
+  --red:#b83228;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:20px}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Noto Sans TC',sans-serif;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;background:var(--white);min-height:100vh}
+
+/* ── HEADER ── */
+header{
+  background:var(--green);
+  padding:1.6rem 1.2rem 1.4rem;
+  text-align:center;
+}
+.h-lotus{font-size:2.4rem;line-height:1;margin-bottom:.4rem}
+.h-title{
+  font-family:'Noto Serif TC',serif;
+  font-size:1.35rem;font-weight:900;
+  color:#fff;line-height:1.5;letter-spacing:.05em;
+}
+.h-sub{font-size:.8rem;color:rgba(255,255,255,.68);margin-top:.35rem}
+
+/* ── 分組標籤 ── */
+.cards{padding:.9rem .75rem 3rem}
+.group-label{
+  display:flex;align-items:center;gap:.5rem;
+  margin:1.2rem 0 .55rem;
+  font-size:.72rem;font-weight:700;
+  letter-spacing:.1em;color:var(--ink-m);
+}
+.group-label::before,.group-label::after{content:'';flex:1;height:1.5px;background:var(--sep)}
+.group-label:first-child{margin-top:.1rem}
+
+/* ── 卡片 ── */
+.card{
+  border:2px solid var(--border);
+  border-radius:14px;
+  margin-bottom:.85rem;
+  overflow:hidden;
+  background:var(--white);
+  box-shadow:0 2px 6px rgba(31,83,53,.08);
+}
+.card-hd{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.9rem 1rem .85rem;
+  cursor:pointer;
+  -webkit-user-select:none;user-select:none;
+  background:var(--white);
+  min-height:68px;
+  transition:background .15s;
+}
+.card-hd:active{background:var(--green-p)}
+.card.open>.card-hd{border-bottom:2px solid var(--sep)}
+.card-ic{font-size:1.6rem;flex-shrink:0;line-height:1}
+.card-info{flex:1;min-width:0}
+.card-name{
+  font-family:'Noto Serif TC',serif;
+  font-size:1.1rem;font-weight:900;
+  color:var(--ink);line-height:1.35;
+}
+.card-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--green);color:#fff;
+  font-size:.65rem;font-weight:900;
+  margin-right:.4rem;flex-shrink:0;
+  vertical-align:middle;line-height:1;
+}
+.card-note{font-size:.75rem;color:var(--ink-m);margin-top:.05rem}
+.card-arrow{
+  font-size:1.1rem;color:var(--ink-m);
+  transition:transform .28s;flex-shrink:0;
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+}
+.card.open .card-arrow{transform:rotate(180deg)}
+
+/* ── 卡片體 ── */
+.card-body{display:none;padding:.85rem 1rem 1rem}
+.card.open>.card-body{display:block}
+
+.period-hd{
+  display:flex;align-items:center;gap:.45rem;
+  margin:.05rem 0 .55rem;
+  font-size:.75rem;font-weight:700;
+  letter-spacing:.06em;color:var(--ink-m);
+}
+.period-hd::after{content:'';flex:1;height:1px;background:var(--sep)}
+.period-hd+.period-hd{margin-top:.9rem}
+.pbadge{
+  display:inline-block;
+  font-size:.68rem;font-weight:900;
+  padding:.07rem .45rem;border-radius:4px;
+  white-space:nowrap;margin-right:.3rem;
+}
+.pbadge.pre{background:#ede0ff;color:#4a1a8c;border:1px solid #c8a0f0}
+.pbadge.day{background:#ffecd0;color:#7a3500;border:1px solid #f0b070}
+
+.rows{list-style:none}
+.row{
+  display:flex;align-items:baseline;gap:.5rem;
+  padding:.45rem 0;
+  border-bottom:1px dashed var(--sep);
+  font-size:.95rem;line-height:1.6;
+  color:var(--ink-s);
+}
+.row:last-child{border-bottom:none}
+.row-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green-l);
+  flex-shrink:0;margin-top:.55rem;
+}
+.row.warn .row-dot{background:var(--red)}
+.row.warn .rw{font-weight:700;color:var(--ink)}
+
+.contact{
+  display:flex;align-items:center;flex-wrap:wrap;
+  gap:.35rem .55rem;
+  padding:.6rem .8rem;
+  background:var(--green-p);
+  border-radius:9px;margin-top:.9rem;
+  font-size:.9rem;
+}
+.contact-ic{font-size:1rem;flex-shrink:0}
+.contact-nm{font-weight:900;color:var(--green)}
+.contact-tel{color:var(--ink-s);letter-spacing:.04em}
+
+/* ── 回頂端 ── */
+.back-top{
+  position:fixed;
+  right:max(16px,calc((100vw - 560px)/2 + 16px));
+  bottom:24px;
+  width:48px;height:48px;border-radius:50%;
+  background:var(--green);color:#fff;
+  border:none;font-size:1.3rem;cursor:pointer;
+  box-shadow:0 3px 14px rgba(31,83,53,.32);
+  opacity:0;pointer-events:none;
+  transition:opacity .3s,transform .2s;z-index:400;
+  display:flex;align-items:center;justify-content:center;
+}
+.back-top.on{opacity:1;pointer-events:auto}
+.back-top:active{transform:scale(.9)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  
+  <div class="h-emoji">🪷</div>
+  <div class="h-title">0524 各組義工上線時間</div>
+  <div class="h-sub">5/23（六）・5/24（日）</div>
+</header>
+
+<div class="cards" id="cardArea"></div>
+
+</div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const SECTIONS = [
+  {
+    label: null,
+    groups: [
+      {
+        id:'g01',ic:'🕯️',name:'心燈組',note:'自備海青',
+        pre:[
+          {t:'17:00 前抵寺 → 華嚴 B1 指揮中心'},
+          {t:'17:00 後抵寺 → 正覺廳（18:50 就座完畢）'},
+          {t:'19:30 後抵寺 → 請聯繫負責法師',warn:true},
+          {t:'21:30 後抵寺 → 隔日 06:30 報到，菩提講堂後方心燈休息區'},
+        ],
+        day:[
+          {t:'06:30 報到後上線 → 菩提講堂後方心燈休息區'},
+        ],
+        monks:'星韻法師',tel:'0965-706-709'
+      },
+      {
+        id:'g02',ic:'🍽️',name:'行堂組',
+        pre:[
+          {t:'報到後上線，19:30 行堂會議 → 五觀堂'},
+          {t:'21:00 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'前一日抵寺者：04:50 上線'},
+          {t:'當日抵寺者：報到後上線，19:30 行堂會議'},
+          {t:'集合地點 → 菩提廊道電子看版對面'},
+        ],
+        monks:'星止法師　0965-323-793　／　星巧法師',tel:'0965-323-817'
+      },
+    ]
+  },
+  {
+    label: '大　寮',
+    groups: [
+      {
+        id:'g03',ic:'🍚',name:'大寮煮飯區',
+        pre:[
+          {t:'上午聯繫負責法師、下午 16:00 上線 → 煮飯區',warn:true},
+          {t:'17:00 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'04:00 上線 → 煮飯區'},
+        ],
+        monks:'星愍法師',tel:'0975-120-561'
+      },
+      {
+        id:'g04',ic:'🍲',name:'大寮內場',
+        pre:[
+          {t:'上午 08:30 上線、下午 16:15 上線 → 菩提大寮（自動門旁，需按門鈴）'},
+          {t:'17:00 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'04:30 上線 → 菩提大寮（自動門旁，需按門鈴）'},
+        ],
+        monks:'見婉法師',tel:'0911-683-493'
+      },
+      {
+        id:'g05',ic:'🥄',name:'大寮炒手',
+        pre:[
+          {t:'上午 08:30 上線、下午 16:30 上線 → 菩提大寮（自動門旁，需按門鈴）'},
+          {t:'18:30 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'05:00 上線 → 菩提大寮（自動門旁，需按門鈴）'},
+        ],
+        monks:'見聿法師',tel:'0975-120-558'
+      },
+      {
+        id:'g06',ic:'🌿',name:'大寮挑菜區',
+        pre:[
+          {t:'08:30～11:30、14:00～17:30 上線 → 菩提苑'},
+          {t:'17:30 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'08:15 上線 → 菩提苑'},
+        ],
+        monks:'見洹法師',tel:'0963-437-295'
+      },
+      {
+        id:'g07',ic:'💧',name:'大寮洗菜區',
+        pre:[
+          {t:'08:30～11:30、14:00～17:30 上線 → 洗菜區'},
+          {t:'17:30 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'08:00 上線 → 洗菜區'},
+        ],
+        monks:'見織法師／星熔法師',tel:'0975-120-560'
+      },
+      {
+        id:'g08',ic:'🔪',name:'大寮切菜區',
+        pre:[
+          {t:'08:30～11:30、14:00～17:30 上線 → 切菜區'},
+          {t:'17:30 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'08:15 上線 → 切菜區'},
+        ],
+        monks:'見函法師',tel:'0975-120-559'
+      },
+    ]
+  },
+  {
+    label: '其　他',
+    groups: [
+      {
+        id:'g09',ic:'🛡️',name:'安全組',
+        pre:[
+          {t:'報到後上線 → 安全組（般若車道口）'},
+          {t:'19:00 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'07:00 上線 → 安全組（般若車道口）'},
+        ],
+        monks:'見舳法師',tel:'0919-055-436'
+      },
+      {
+        id:'g10',ic:'♻️',name:'女眾機動環保組',
+        pre:[
+          {t:'報到後上線 → B2 女環休息區'},
+          {t:'19:00 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'07:00 上線 → B2 女環休息區'},
+        ],
+        monks:'見臧法師',tel:'0963-437-279'
+      },
+      {
+        id:'g11',ic:'🌱',name:'男眾環保組',
+        pre:[
+          {t:'14:00 上線 → B2 男環休息區'},
+          {t:'17:30 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'07:40 上線 → B2 男環休息區'},
+        ],
+        monks:'見仿法師',tel:'0975-120-529'
+      },
+      {
+        id:'g12',ic:'🏥',name:'醫護組',
+        pre:[
+          {t:'報到後上線 → 醫護中心'},
+          {t:'20:00 後抵寺者，隔日上線'},
+        ],
+        day:[
+          {t:'07:30 上線 → 醫護中心'},
+        ],
+        monks:'見桐法師',tel:'0972-388-771'
+      },
+      {
+        id:'g13',ic:'🔦',name:'女眾巡寮組',
+        pre:[
+          {t:'21:00 前抵寺者，報到後上線 → 華嚴 B1 指揮中心'},
+        ],
+        day:[
+          {t:'08:30 報到後上線 → 華嚴 B1 指揮中心'},
+        ],
+        monks:'見呂法師',tel:'0975-220-447'
+      },
+      {
+        id:'g14',ic:'👘',name:'衣缽組',
+        pre:[
+          {t:'聯繫負責法師 → 圓覺禪堂外廊道',warn:true},
+        ],
+        day:[
+          {t:'07:00 報到後上線 → 圓覺禪堂外廊道'},
+        ],
+        monks:'見穫法師',tel:'0963-437-353'
+      },
+    ]
+  },
+];
+
+/* 建構 */
+const area = document.getElementById('cardArea');
+
+function rowHTML(r){
+  return `<li class="row${r.warn?' warn':''}">
+    <span class="row-dot"></span><span class="rw">${r.t}</span>
+  </li>`;
+}
+
+let cardNum = 0;
+SECTIONS.forEach(sec => {
+  if(sec.label){
+    const lbl = document.createElement('div');
+    lbl.className = 'group-label';
+    lbl.textContent = sec.label;
+    area.appendChild(lbl);
+  }
+
+  sec.groups.forEach(g => {
+    cardNum++;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + g.id;
+
+    const noteHTML  = g.note  ? `<div class="card-note">${g.note}</div>` : '';
+    const contactHTML = g.monks
+      ? `<div class="contact">
+           <span class="contact-ic">☎️</span>
+           <span class="contact-nm">${g.monks}</span>
+           <span class="contact-tel">${g.tel||''}</span>
+         </div>` : '';
+
+    card.innerHTML = `
+      <div class="card-hd" onclick="this.closest('.card').classList.toggle('open')">
+        <span class="card-ic">${g.ic}</span>
+        <div class="card-info">
+          <div class="card-name"><span class="card-num">${cardNum}</span>${g.name}</div>${noteHTML}
+        </div>
+        <span class="card-arrow">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="period-hd"><span class="pbadge pre">5/23 法會前一天</span></div>
+        <ul class="rows">${g.pre.map(rowHTML).join('')}</ul>
+        <div class="period-hd"><span class="pbadge day">5/24 法會當日</span></div>
+        <ul class="rows">${g.day.map(rowHTML).join('')}</ul>
+        ${contactHTML}
+      </div>`;
+
+    area.appendChild(card);
+  });
+});
+
+/* 回頂端 */
+const bt = document.getElementById('backTop');
+window.addEventListener('scroll', () => bt.classList.toggle('on', scrollY > 300), {passive:true});
+</script>
+</body>
+</html>
