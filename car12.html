@@ -169,7 +169,13 @@
     .tag { display: inline-block; font-size: .78rem; padding: 3px 8px; border-radius: 8px; font-weight: 700; }
     .tag-m    { background: #e3f2fd; color: #0d47a1; }
     .tag-f    { background: #fce4ec; color: #880e4f; }
-    .tag-unit { background: #f3e8ff; color: #5b21b6; }
+    .tag-unit {
+      background: #f3e8ff; color: #5b21b6;
+      cursor: pointer;
+      text-decoration: underline dotted #9d69e0;
+      transition: background .15s;
+    }
+    .tag-unit:active { background: #e0c8ff; }
     .tag-room { background: #e8f5e9; color: #2e7d32; }
 
     /* ══════════════════════════════
@@ -426,6 +432,16 @@
   </div>
 </div>
 
+<!-- ════ 上線時間 Sheet ════ -->
+<div class="modal-overlay" id="duty-sheet">
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="duty-sheet-title">📋 上線時間</div>
+    <div id="duty-sheet-body"></div>
+    <button class="btn btn-gray btn-full mt-3" onclick="closeDutySheet()">關閉</button>
+  </div>
+</div>
+
 <script>
 // ╔══════════════════════════════════════════════════════╗
 // ║  ★ 部署設定（需要更改時只需修改此區塊）              ║
@@ -500,7 +516,7 @@ function renderStats(){
 function tagHtml(s){
   let h = '';
   if(s.gender) h += `<span class="tag tag-${s.gender==='女'?'f':'m'}">${esc(s.gender)}</span>`;
-  if(s.unit)   h += `<span class="tag tag-unit">${esc(s.unit)}</span>`;
+  if(s.unit)   h += `<span class="tag tag-unit" onclick="event.stopPropagation();openDutySheet('${esc(s.unit)}')">${esc(s.unit)}</span>`;
   if(s.room)   h += `<span class="tag tag-room">🛏${esc(s.room)}</span>`;
   return h;
 }
@@ -575,7 +591,7 @@ function renderCards(){
     el.id = 'card-' + nCode(s.code);
     if(!fr && !isReadonly) el.onclick = () => openCardSelfSheet(nCode(s.code));
 
-    const unit  = s.unit ? `<span class="tag tag-unit">${esc(s.unit)}</span>` : '';
+    const unit  = s.unit ? `<span class="tag tag-unit" onclick="event.stopPropagation();openDutySheet('${esc(s.unit)}')">${esc(s.unit)}</span>` : '';
     const room  = s.room ? `<span class="tag tag-room">🛏${esc(s.room)}</span>` : '';
     // 前3張顯示電話（純文字不可點）
     const phoneHtml = (isCore && s.phone)
@@ -869,6 +885,217 @@ document.getElementById('back-to-top').onclick = function(){
   const sheet = document.querySelector('#leader-sheet .modal-sheet');
   if(sheet) sheet.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+// ══════════════════════════════════════
+// 上線時間資料庫
+// ══════════════════════════════════════
+const DUTY_DATA = {
+  '心燈組': {
+    ic: '🕯️', note: '自備海青',
+    pre: [
+      { t: '17:00 前抵寺 → 華嚴 B1 指揮中心' },
+      { t: '17:00 後抵寺 → 正覺廳（18:50 就座完畢）' },
+      { t: '19:30 後抵寺 → 請聯繫負責法師', warn: true },
+      { t: '21:30 後抵寺 → 隔日 06:30 報到，菩提講堂後方心燈休息區' },
+    ],
+    day: [
+      { t: '06:30 報到後上線 → 菩提講堂後方心燈休息區' },
+    ],
+    monks: '星韻法師', tel: '0965-706-709'
+  },
+  '行堂組': {
+    ic: '🍽️',
+    pre: [
+      { t: '報到後上線，19:30 行堂會議 → 五觀堂' },
+      { t: '21:00 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '前一日抵寺者：04:50 上線' },
+      { t: '當日抵寺者：報到後上線，19:30 行堂會議' },
+      { t: '集合地點 → 菩提廊道電子看版對面' },
+    ],
+    monks: '星止法師　0965-323-793　／　星巧法師', tel: '0965-323-817'
+  },
+  '大寮煮飯區': {
+    ic: '🍚',
+    pre: [
+      { t: '上午聯繫負責法師、下午 16:00 上線 → 煮飯區', warn: true },
+      { t: '17:00 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '04:00 上線 → 煮飯區' },
+    ],
+    monks: '星愍法師', tel: '0975-120-561'
+  },
+  '大寮內場': {
+    ic: '🍲',
+    pre: [
+      { t: '上午 08:30 上線、下午 16:15 上線 → 菩提大寮（自動門旁，需按門鈴）' },
+      { t: '17:00 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '04:30 上線 → 菩提大寮（自動門旁，需按門鈴）' },
+    ],
+    monks: '見婉法師', tel: '0911-683-493'
+  },
+  '大寮炒手': {
+    ic: '🥄',
+    pre: [
+      { t: '上午 08:30 上線、下午 16:30 上線 → 菩提大寮（自動門旁，需按門鈴）' },
+      { t: '18:30 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '05:00 上線 → 菩提大寮（自動門旁，需按門鈴）' },
+    ],
+    monks: '見聿法師', tel: '0975-120-558'
+  },
+  '大寮挑菜區': {
+    ic: '🌿',
+    pre: [
+      { t: '08:30～11:30、14:00～17:30 上線 → 菩提苑' },
+      { t: '17:30 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '08:15 上線 → 菩提苑' },
+    ],
+    monks: '見洹法師', tel: '0963-437-295'
+  },
+  '大寮洗菜區': {
+    ic: '💧',
+    pre: [
+      { t: '08:30～11:30、14:00～17:30 上線 → 洗菜區' },
+      { t: '17:30 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '08:00 上線 → 洗菜區' },
+    ],
+    monks: '見織法師／星熔法師', tel: '0975-120-560'
+  },
+  '大寮切菜區': {
+    ic: '🔪',
+    pre: [
+      { t: '08:30～11:30、14:00～17:30 上線 → 切菜區' },
+      { t: '17:30 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '08:15 上線 → 切菜區' },
+    ],
+    monks: '見函法師', tel: '0975-120-559'
+  },
+  '安全組': {
+    ic: '🛡️',
+    pre: [
+      { t: '報到後上線 → 安全組（般若車道口）' },
+      { t: '19:00 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '07:00 上線 → 安全組（般若車道口）' },
+    ],
+    monks: '見舳法師', tel: '0919-055-436'
+  },
+  '女眾機動環保組': {
+    ic: '♻️',
+    pre: [
+      { t: '報到後上線 → B2 女環休息區' },
+      { t: '19:00 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '07:00 上線 → B2 女環休息區' },
+    ],
+    monks: '見臧法師', tel: '0963-437-279'
+  },
+  '男眾環保組': {
+    ic: '🌱',
+    pre: [
+      { t: '14:00 上線 → B2 男環休息區' },
+      { t: '17:30 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '07:40 上線 → B2 男環休息區' },
+    ],
+    monks: '見仿法師', tel: '0975-120-529'
+  },
+  '醫護組': {
+    ic: '🏥',
+    pre: [
+      { t: '報到後上線 → 醫護中心' },
+      { t: '20:00 後抵寺者，隔日上線' },
+    ],
+    day: [
+      { t: '07:30 上線 → 醫護中心' },
+    ],
+    monks: '見桐法師', tel: '0972-388-771'
+  },
+  '女眾巡寮組': {
+    ic: '🔦',
+    pre: [
+      { t: '21:00 前抵寺者，報到後上線 → 華嚴 B1 指揮中心' },
+    ],
+    day: [
+      { t: '08:30 報到後上線 → 華嚴 B1 指揮中心' },
+    ],
+    monks: '見呂法師', tel: '0975-220-447'
+  },
+  '衣缽組': {
+    ic: '👘',
+    pre: [
+      { t: '聯繫負責法師 → 圓覺禪堂外廊道', warn: true },
+    ],
+    day: [
+      { t: '07:00 報到後上線 → 圓覺禪堂外廊道' },
+    ],
+    monks: '見穫法師', tel: '0963-437-353'
+  },
+};
+
+function dutyRowsHTML(rows){
+  return rows.map(r => `
+    <div style="display:flex;align-items:baseline;gap:8px;padding:8px 0;border-bottom:1px dashed #e8d9c0;font-size:.95rem;line-height:1.6;color:#3a2a1a;">
+      <span style="width:7px;height:7px;border-radius:50%;background:${r.warn?'#b83228':'#4aaa66'};flex-shrink:0;margin-top:8px;display:inline-block;"></span>
+      <span style="${r.warn?'font-weight:700;color:#8a1a10;':''}">${r.t}</span>
+    </div>`).join('');
+}
+
+function openDutySheet(unitName){
+  const d = DUTY_DATA[unitName];
+  const title = document.getElementById('duty-sheet-title');
+  const body  = document.getElementById('duty-sheet-body');
+
+  title.textContent = (d ? d.ic + ' ' : '📋 ') + unitName;
+
+  if(!d){
+    body.innerHTML = `<div style="text-align:center;color:#888;padding:28px 0;font-size:.95rem;">此組別目前無上線時間資料</div>`;
+  } else {
+    const noteHTML = d.note
+      ? `<div style="font-size:.78rem;color:#7a5a30;margin-bottom:12px;">（${d.note}）</div>` : '';
+    const periodStyle = 'display:flex;align-items:center;gap:8px;margin:16px 0 10px;font-size:.72rem;font-weight:700;letter-spacing:.07em;color:#7a6050;';
+    const badgePreStyle = 'display:inline-block;font-size:.66rem;font-weight:900;padding:3px 8px;border-radius:4px;background:#ede0ff;color:#4a1a8c;border:1px solid #c8a0f0;';
+    const badgeDayStyle = 'display:inline-block;font-size:.66rem;font-weight:900;padding:3px 8px;border-radius:4px;background:#ffecd0;color:#7a3500;border:1px solid #f0b070;';
+    const sepLine = '<div style="flex:1;height:1px;background:#f0e4d0;"></div>';
+    const contactHTML = d.monks
+      ? `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:10px 14px;background:#eaf6ef;border-radius:10px;margin-top:16px;font-size:.9rem;">
+           <span>☎️</span>
+           <span style="font-weight:900;color:#1f5335;">${d.monks}</span>
+           <span style="color:#2e4a34;letter-spacing:.03em;">${d.tel||''}</span>
+         </div>` : '';
+    body.innerHTML = `
+      ${noteHTML}
+      <div style="${periodStyle}"><span style="${badgePreStyle}">5/23 法會前一天</span>${sepLine}</div>
+      ${dutyRowsHTML(d.pre)}
+      <div style="${periodStyle}"><span style="${badgeDayStyle}">5/24 法會當日</span>${sepLine}</div>
+      ${dutyRowsHTML(d.day)}
+      ${contactHTML}`;
+  }
+  document.getElementById('duty-sheet').classList.add('show');
+}
+
+function closeDutySheet(){
+  document.getElementById('duty-sheet').classList.remove('show');
+}
+
+document.getElementById('duty-sheet').addEventListener('click', function(e){
+  if(e.target === this) closeDutySheet();
+});
 
 window.onload = async () => {
   isReadonly = (window.location.hash === '#readonly');
