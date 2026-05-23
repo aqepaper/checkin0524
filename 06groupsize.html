@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>普高 各組報到名單</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    background: #f4f4f0;
+    color: #1a1a1a;
+    padding: 24px 16px 48px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: .04em;
+    margin-bottom: 4px;
+  }
+  header p {
+    font-size: 12px;
+    color: #888;
+  }
+  .group-block {
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  }
+  .group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .group-no {
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    background: #5a7a9a;
+    border-radius: 99px;
+    padding: 2px 9px;
+    flex-shrink: 0;
+  }
+  .group-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    flex: 1;
+  }
+  .group-count {
+    font-size: 12px;
+    color: #888;
+    background: #f4f4f0;
+    padding: 2px 10px;
+    border-radius: 99px;
+  }
+  .name-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 4px 8px 10px;
+  }
+  .name-cell {
+    padding: 7px 8px;
+    font-size: 13.5px;
+    text-align: center;
+    color: #222;
+    border-radius: 6px;
+  }
+  .name-cell:hover { background: #f4f4f0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>05/23 義工大車各組報到名單</h1>
+  <p>5/23 抵寺　可報到共 68 人（33+35）　共 13 組　依人數多寡排列</p>
+</header>
+
+<div id="groups"></div>
+
+<script>
+const groups = [
+  { name: '行堂組', members: ['陳文瑞','黃榮平','趙慶龍','方玉玲','吳麗雲','李淑娟','柳雪美','洪宇力','耿美珠','郭雅珍','陳虹君','陳麗萍','陳麗蓉','曾秀雲','馮素琴','蔡佩儒','薛佳琳','蘇姵橙'] },
+  { name: '心燈組', members: ['余紀彤','吳雅芬','林靜楓','邱靖瑋','郭懿文','陳秀卿','熊宣涵','趙錦鳳','蔣慧芬','蔡心誼','蔡欣璇','衛愛黎'] },
+  { name: '安全組', members: ['婁國棟','王燕紹','朱游菽','林千鶴','姜力心','莊淑珍','陳錦華','劉婷繡','潘美桃','龔淑珍'] },
+  { name: '大寮挑菜區', members: ['林家卉','林瑛','趙錦雀','蔡綉麗','蕭孟華'] },
+  { name: '女眾機動環保組', members: ['姜乃婍','柯慈音','高裕惠','陳秋萍','黃子容'] },
+  { name: '大寮內場', members: ['吳志明','沈天成','羅輝農'] },
+  { name: '大寮炒手', members: ['許來展','陳榮宗','朱麗俐'] },
+  { name: '大寮洗菜區', members: ['郭旭洲','周淑娟','陳許秀月'] },
+  { name: '男眾環保組', members: ['黃文崇','葉立橙','詹益坤'] },
+  { name: '大寮切菜區', members: ['胡益鐘','蔡美佐'] },
+  { name: '醫護組', members: ['周端梅','高玉梅'] },
+  { name: '大寮煮飯區', members: ['高如巧'] },
+  { name: '女眾巡寮組', members: ['陳美玉'] },
+];
+
+const colors = [
+  '#4a6fa5','#5a8a6a','#8a5a7a','#7a6a3a','#3a7a8a',
+  '#7a4a5a','#5a6a7a','#6a8a4a','#8a6a4a','#4a8a7a',
+  '#7a5a8a','#6a4a7a','#8a7a4a'
+];
+
+const container = document.getElementById('groups');
+groups.forEach((g, i) => {
+  const block = document.createElement('div');
+  block.className = 'group-block';
+
+  const cells = g.members.map(n => `<div class="name-cell">${n}</div>`).join('');
+
+  block.innerHTML = `
+    <div class="group-header">
+      <span class="group-no" style="background:${colors[i]}">第 ${i+1} 組</span>
+      <span class="group-name">${g.name}</span>
+      <span class="group-count">${g.members.length} 人</span>
+    </div>
+    <div class="name-grid">${cells}</div>
+  `;
+  container.appendChild(block);
+});
+</script>
+</body>
+</html>
