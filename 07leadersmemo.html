@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+<title>0524 義工領隊備忘錄 v10</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #eaf6ef;
+  --white:    #ffffff;
+  --ink:      #1a2e20;
+  --ink-s:    #2e4a34;
+  --ink-m:    #556b5a;
+  --green:    #1f5335;
+  --green-m:  #2e7d4a;
+  --green-l:  #4aaa66;
+  --green-p:  #c8ecd4;
+  --border:   #c0dcc8;
+  --border-d: #4aaa66;
+  --sep:      #d4e8da;
+  --sep-sec:  #1f5335;
+  --amber-bg: #fff8d4;
+  --amber:    #856404;
+  --red-bg:   #fdecea;
+  --red:      #c0392b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 20px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Sans TC', sans-serif;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 600px; margin: 0 auto; background: var(--bg); }
+
+/* HEADER */
+header {
+  background: var(--white);
+  border-bottom: 3px solid var(--green-p);
+  padding: 1.5rem 1.2rem 1.2rem;
+  text-align: center;
+}
+.h-lotus { font-size: 2.6rem; line-height: 1; margin-bottom: 0.4rem; }
+.h-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1.5rem; font-weight: 900;
+  color: var(--green); line-height: 1.4; letter-spacing: 0.04em;
+}
+.h-sub { font-size: 0.82rem; color: var(--ink-m); margin-top: 0.3rem; }
+
+/* 書籤快跳列 */
+.pjb { display: none; background: var(--amber-bg); border-bottom: 2px solid #e6c840; padding: 0.7rem 1.1rem 0.8rem; }
+.pjb.on { display: block; }
+.pjb-hd { font-size: 0.78rem; font-weight: 700; color: var(--amber); margin-bottom: 0.5rem; }
+.pjb-list { list-style: none; }
+.pjb-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; border-bottom: 1px dashed #e0cc80; cursor: pointer; font-size: 0.88rem; color: var(--ink); }
+.pjb-row:last-child { border-bottom: none; }
+.pjb-row:active { background: #fff3c4; }
+.pjb-n { width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: #fff; font-size: 0.68rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pjb-txt { flex: 1; font-weight: 500; }
+.pjb-dt { font-size: 0.72rem; color: var(--ink-m); white-space: nowrap; }
+
+
+/* 角色說明 */
+.roles { padding: 0.7rem 1.2rem 0.6rem; border-bottom: 4px solid var(--sep-sec); background: var(--white); font-size: 12px; }
+.roles-title { font-family: 'Noto Serif TC', serif; font-size: 1em; font-weight: 900; color: var(--ink-m); letter-spacing: 0.08em; margin-bottom: 0.7rem; }
+.role-line { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.48rem 0; border-bottom: 1px solid var(--sep); font-size: 1em; line-height: 1.6; }
+.role-line:last-of-type { border-bottom: none; }
+.role-em { font-weight: 900; color: var(--green); min-width: 5.5em; flex-shrink: 0; }
+.role-desc { color: var(--ink-s); }
+
+/* ===== CARD ACCORDION ===== */
+.cards { padding: 0.9rem 0.85rem; display: flex; flex-direction: column; gap: 0.75rem; background: var(--bg); }
+
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 2px 8px rgba(31,83,53,.07);
+  overflow: hidden;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+.card.all-done {
+  border-color: var(--border-d);
+  background: #f5fcf7;
+  box-shadow: 0 2px 12px rgba(74,170,102,.15);
+}
+
+/* 卡片標題列（可點擊） */
+.card-hd {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem 0.85rem 0.9rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 0.15s;
+  position: relative;
+}
+.card-hd:active { background: var(--green-p); }
+
+.card-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--green); color: #fff;
+  font-size: 0.82rem; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.card.all-done .card-num { background: var(--border-d); }
+
+.card-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+.card-info { flex: 1; min-width: 0; }
+.card-date {
+  display: inline-block;
+  font-size: 0.7rem; font-weight: 900;
+  background: #f39c12; color: #fff;
+  padding: 0.1rem 0.45rem; border-radius: 3px;
+  line-height: 1.4; letter-spacing: 0.02em;
+  margin-bottom: 0.2rem;
+}
+.card-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1rem; font-weight: 900;
+  color: var(--ink); line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card.all-done .card-title { color: var(--green); }
+
+.card-done {
+  display: none;
+  font-size: 0.7rem; font-weight: 900;
+  background: var(--border-d); color: #fff;
+  padding: 0.12rem 0.4rem; border-radius: 5px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.card.all-done .card-done { display: inline-block; }
+
+/* 書籤按鈕 */
+.pin-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.05rem;
+  min-width: 44px; min-height: 44px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--white); cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  padding: 0.25rem 0.3rem; flex-shrink: 0;
+}
+.pin-btn:active { transform: scale(0.9); }
+.pin-btn.on { background: #fffbe6; border-color: #e6b800; }
+.pin-icon { font-size: 1rem; line-height: 1; }
+.pin-lbl  { font-size: 0.55rem; font-weight: 700; color: var(--ink-m); line-height: 1; font-family: inherit; }
+.pin-btn.on .pin-lbl { color: var(--amber); }
+
+/* 折疊箭頭 */
+.card-arrow {
+  font-size: 0.85rem; color: var(--ink-m);
+  flex-shrink: 0; transition: transform 0.28s;
+  width: 20px; text-align: center;
+}
+.card.open .card-arrow { transform: rotate(180deg); }
+
+/* 卡片內容（折疊） */
+.card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1);
+}
+.card.open .card-body { max-height: 9999px; }
+.card-inner {
+  padding: 0 1.1rem 1rem;
+  border-top: 2px solid var(--green-p);
+}
+
+/* Alert */
+.alert { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.65rem 0.85rem; margin: 0.75rem 0 0.5rem; border-radius: 7px; font-size: 0.88rem; font-weight: 500; line-height: 1.55; }
+.ai { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+.a-warn { background: var(--amber-bg); border-left: 4px solid #e6b800; color: #5a4000; }
+.a-red  { background: var(--red-bg);   border-left: 4px solid var(--red); color: #7a1010; }
+.a-info { background: var(--green-p);  border-left: 4px solid var(--green-l); color: var(--green); }
+
+/* 小分隔標題 */
+.sdiv { display: flex; align-items: center; gap: 0.5rem; margin: 0.85rem 0 0.5rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-m); letter-spacing: 0.08em; }
+.sdiv::before, .sdiv::after { content: ''; flex: 1; height: 1px; background: var(--sep); }
+
+/* 勾選列 */
+.cl { list-style: none; }
+.ci {
+  display: flex; align-items: flex-start; gap: 0.55rem;
+  padding: 0.75rem 0.6rem 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--sep);
+  border-left: 5px solid #e6b800;
+  background: #fffdf4;
+  cursor: pointer;
+  -webkit-user-select: none; user-select: none;
+  transition: border-left-color 0.2s, background 0.2s;
+}
+.ci.hi {
+  border-left-color: #e74c3c;
+  background: #fff8f7;
+}
+.ci:last-child { border-bottom: none; }
+.ci:active { background: var(--green-p) !important; }
+.ci.ck {
+  background: var(--green-p);
+  border-left-color: var(--green-m) !important;
+}
+.cb { width: 36px; height: 36px; flex-shrink: 0; border: 3px solid var(--green-m); border-radius: 8px; background: var(--white); display: flex; align-items: center; justify-content: center; margin-top: 0.05rem; transition: background 0.15s, border-color 0.15s, transform 0.1s; }
+.ci:active .cb { transform: scale(0.88); }
+.ci.ck .cb { background: var(--green); border-color: var(--green); }
+.ci.ck .cb::after { content: '✓'; color: #fff; font-size: 1.3rem; font-weight: 900; line-height: 1; animation: pop 0.2s cubic-bezier(0.175,0.885,0.32,1.275); }
+@keyframes pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.ct { flex: 1; font-size: 0.97rem; color: var(--ink); line-height: 1.6; min-width: 0; }
+.ci.ck .ct { color: var(--green); text-decoration: line-through; text-decoration-color: var(--green-m); }
+.rb { display: inline-block; border-radius: 4px; font-size: 0.72rem; font-weight: 900; padding: 0.05rem 0.38rem; margin-right: 0.25rem; line-height: 1.4; white-space: nowrap; vertical-align: middle; }
+.rL { background: #fff3c4; color: #7a5000; border: 1px solid #e6c000; }
+.rA { background: #d0eeff; color: #004070; border: 1px solid #70b8ee; }
+.rB { background: #ffd6d6; color: #7a0000; border: 1px solid #e06060; }
+.rX { background: var(--green-p); color: var(--green); border: 1px solid var(--green-l); }
+
+/* 最後核對 */
+.final-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 2px 8px rgba(31,83,53,.07);
+  overflow: hidden;
+  margin: 0 0.85rem 0.75rem;
+}
+.final-hd {
+  padding: 0.85rem 1rem;
+  background: var(--green);
+  color: #fff;
+}
+.final-title { font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 900; }
+.final-body { padding: 0 1.1rem 0.5rem; }
+.fcl { list-style: none; }
+.fi { display: flex; align-items: flex-start; gap: 0.55rem; padding: 0.62rem 0; border-bottom: 1px solid var(--sep); cursor: pointer; -webkit-user-select: none; user-select: none; transition: background 0.12s; }
+.fi:last-child { border-bottom: none; }
+.fi:active { background: var(--green-p); }
+.fi.ck { opacity: 0.6; }
+.fcb { width: 32px; height: 32px; flex-shrink: 0; border: 2.5px solid var(--green-m); border-radius: 7px; background: var(--white); display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 0.05rem; }
+.fi.ck .fcb { background: var(--green); border-color: var(--green); }
+.fi.ck .fcb::after { content:'✓'; color:#fff; font-size:1.1rem; font-weight:900; line-height:1; animation:pop .2s cubic-bezier(.175,.885,.32,1.275); }
+.ft { flex: 1; font-size: 0.95rem; color: var(--ink); line-height: 1.55; }
+.fi.ck .ft { text-decoration: line-through; color: var(--ink-m); }
+
+/* 圖例 */
+.legend { padding: 0.7rem 1.1rem; border-top: 1px solid var(--sep); display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.75rem; color: var(--ink-m); background: var(--white); margin: 0 0.85rem 1rem; border-radius: 0 0 12px 12px; border: 1.5px solid var(--border); border-top: 1px solid var(--sep); }
+
+/* 回頂端 */
+.back-top { position: fixed; right: max(14px, calc((100vw - 600px)/2 + 14px)); bottom: 24px; width: 44px; height: 44px; border-radius: 50%; background: var(--green); color: #fff; border: none; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 12px rgba(31,83,53,.3); opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.2s; z-index: 400; }
+.back-top.on { opacity: 1; pointer-events: auto; }
+.back-top:active { transform: scale(0.9); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ════ 書籤快跳列 ════ -->
+<div class="pjb" id="pjb">
+  <div class="pjb-hd">📍 我的書籤 — 點選直接跳到該段落</div>
+  <ul class="pjb-list" id="pjbList"></ul>
+</div>
+
+  <span class="prog-ct" id="pCt">0/9</span>
+  <button class="prog-rst" onclick="resetAll()">重置</button>
+</div>
+
+<!-- ════ 角色分工 ════ -->
+<div class="roles">
+  <div class="roles-title">核心角色分工 ／ 三大原則</div>
+  <div class="role-line">
+    <span class="role-em">🟨 領隊</span>
+    <span class="role-desc">全車總指揮・對外訊息單一窗口<br>所有對外聯繫只走領隊</span>
+  </div>
+  <div class="role-line">
+    <span class="role-em">🟦 副領隊 A</span>
+    <span class="role-desc"><strong>跟物有關</strong> — 物資管理・物料分配<br>負責訊息收發（對外仍透過領隊傳達）</span>
+  </div>
+  <div class="role-line">
+    <span class="role-em">🟥 副領隊 B</span>
+    <span class="role-desc"><strong>跟人有關</strong> — 人員關照・點名<br>末端壓班・護念年長者</span>
+  </div>
+  </div>
+</div>
+
+<!-- ════ CARDS ════ -->
+<div class="cards">
+
+<!-- S3 -->
+<div class="card" id="s3">
+  <div class="card-hd" onclick="toggleCard('s3',event)">
+    <div class="card-num">3</div>
+    <div class="card-icon">🚌</div>
+    <div class="card-info">
+      <div class="card-date">5/23（六）15:00 發車</div>
+      <div class="card-title">發車前 — 三項必確認</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s3" onclick="tapPin(event,'s3')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <div class="alert a-red"><span class="ai">🚨</span><span><strong>逾時不候</strong>，準時發車！</span></div>
+      <div class="sdiv">01 遊覽車</div>
+      <ul class="cl" data-sec="s3">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>確認遊覽車停放位置，執行大客車檢查表</div></li>
+      </ul>
+      <div class="sdiv">02 人員報到</div>
+      <ul class="cl" data-sec="s3">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>13:50 完成報到</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rX">全體</span>14:00 義工／學員開始報到</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>逐一點名學員</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>14:40 集合完畢，聯繫尚未到場的學員</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>發放背心、來賓證、點心</div></li>
+      </ul>
+      <div class="sdiv">03 上車</div>
+      <ul class="cl" data-sec="s3">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>確認舉牌、領隊包、點心、水已上車</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>上車後再次點名，到齊回報群組（第 n 車全到）</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>聽到動令，發車</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>提供司機點心、飲水</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="card" id="s4">
+  <div class="card-hd" onclick="toggleCard('s4',event)">
+    <div class="card-num">4</div>
+    <div class="card-icon">🎙️</div>
+    <div class="card-info">
+      <div class="card-date">發車後・車上</div>
+      <div class="card-title">發車後 — 車上依序執行</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s4" onclick="tapPin(event,'s4')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <div class="alert a-warn"><span class="ai">⏱</span><span>發車後 <strong>10 分鐘內</strong>完成雲端回報（實際出席人數）</span></div>
+      <ul class="cl" data-sec="s4">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">① <span class="rb rL">領隊</span>介紹隨車法師</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">② <span class="rb rL">領隊</span>介紹領隊／副領隊／司機及車號</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">③ <span class="rb rL">領隊</span>發心經儀軌</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">④ <span class="rb rL">領隊</span>帶領晚課</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">⑤ <span class="rb rL">領隊</span>播放大客車安全逃生影片</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">⑥ <span class="rb rL">領隊</span>帶領大眾供養，或布達自行供養</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct">⑦ <span class="rb rB">副B</span>發車後 10 分鐘內，雲端回報實際出席人數</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="card" id="s5">
+  <div class="card-hd" onclick="toggleCard('s5',event)">
+    <div class="card-num">5</div>
+    <div class="card-icon">🛣️</div>
+    <div class="card-info">
+      <div class="card-date">行車途中</div>
+      <div class="card-title">行車 ＋ 休息站 ＋ 下國道六號</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s5" onclick="tapPin(event,'s5')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <div class="sdiv">行車途中</div>
+      <ul class="cl" data-sec="s5">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>留意行駛狀況與司機狀態</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>留意學員狀況，有異狀即時回報大領隊</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>核對本車義工總表名單</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>關照學員狀況</div></li>
+      </ul>
+      <div class="sdiv">抵達休息站</div>
+      <ul class="cl" data-sec="s5">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>發訊群組：第 n 車抵達古坑休息站</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知學員：車號、車次、停留十分鐘</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>提醒勿買葷食、垃圾帶下車</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>車外舉牌，義工下車前雙手清消</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>逐一點名，不可只點人頭</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知司機：下國道六號須張貼車前牌</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知司機：等統一動令，不自行發車</div></li>
+      </ul>
+      <div class="sdiv">離開休息站</div>
+      <ul class="cl" data-sec="s5">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>發訊群組：第 n 車離開古坑，全員到齊</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知報到方式（集體或個人）</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>確認義工知悉發心單位、報到時間、掛單寮房</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>提醒：先至出坡單位報到，再去寮房放行李</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知收坡時間：5/24 13:00 收坡，環保站子母車休息區，14:00 集合完畢，自備飲水</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知：回程無便當，各單位中午發放回程點心</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>告知掛單須知</div></li>
+      </ul>
+      <div class="sdiv">下國道六號</div>
+      <ul class="cl" data-sec="s5">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>張貼車前牌</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>提醒學員隨身攜帶個人物品</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>確認並告知司機山上是否提供便當</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="card" id="s6">
+  <div class="card-hd" onclick="toggleCard('s6',event)">
+    <div class="card-num">6</div>
+    <div class="card-icon">🏯</div>
+    <div class="card-info">
+      <div class="card-date">5/24 14:30 集合</div>
+      <div class="card-title">抵達中台 ＋ 集結回程</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s6" onclick="tapPin(event,'s6')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <div class="sdiv">抵達中台</div>
+      <ul class="cl" data-sec="s6">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>下車整隊，帶隊前進</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>前往義工中心完成報到</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rX">全體</span>各自前往發心單位報到</div></li>
+      </ul>
+      <div class="sdiv">集結回程</div>
+      <div class="alert a-info"><span class="ai">🕑</span><span>5/24（日）<strong>13:00 收坡</strong>，環保站子母車休息區，<strong>14:00 集合完畢</strong></span></div>
+      <ul class="cl" data-sec="s6">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>逐一點名，未到者立即聯繫</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>聯絡司機進場候車</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>人員到齊，回報大隊長，候令發車</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>發訊群組：第 n 車 __:__ 離開中台</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S7 -->
+<div class="card" id="s7">
+  <div class="card-hd" onclick="toggleCard('s7',event)">
+    <div class="card-num">7</div>
+    <div class="card-icon">🏠</div>
+    <div class="card-info">
+      <div class="card-date">回程</div>
+      <div class="card-title">回程途中職責</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s7" onclick="tapPin(event,'s7')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <ul class="cl" data-sec="s7">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>車外舉牌（回程休息站）</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>回程休息站：逐一點名，不可只點人頭</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>決定停靠古坑或東山，回報群組</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>收回學員名牌、背心</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>帶動學員分享心得（歡喜法布施）</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>提醒學員帶走個人物品及垃圾</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S8 -->
+<div class="card" id="s8">
+  <div class="card-hd" onclick="toggleCard('s8',event)">
+    <div class="card-num">8</div>
+    <div class="card-icon">⛩️</div>
+    <div class="card-info">
+      <div class="card-date">返抵精舍</div>
+      <div class="card-title">抵達精舍後續作業</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s8" onclick="tapPin(event,'s8')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <ul class="cl" data-sec="s8">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>感謝司機</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rB">副B</span>巡查車廂，確認無遺留物品</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rX">全體</span>須進精舍處理後續物料，<strong>完成才離開</strong></div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S9 -->
+<div class="card" id="s9">
+  <div class="card-hd" onclick="toggleCard('s9',event)">
+    <div class="card-num">9</div>
+    <div class="card-icon">📋</div>
+    <div class="card-info">
+      <div class="card-date">最後任務</div>
+      <div class="card-title">物料歸還 — 清消 ＆ 洗滌</div>
+    </div>
+    <span class="card-done">✓ 完成</span>
+    <button class="pin-btn" id="pin-s9" onclick="tapPin(event,'s9')"><span class="pin-icon">📌</span><span class="pin-lbl">書籤</span></button>
+    <div class="card-arrow">▼</div>
+  </div>
+  <div class="card-body">
+    <div class="card-inner">
+      <div class="sdiv">🩷 清消組（項次 6–14）</div>
+      <ul class="cl" data-sec="s9">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>噴灑酒精於硬體物料</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>擦拭乾淨，靜置晾乾</div></li>
+        <li class="ci" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>點交數量裝入<strong>粉紅色環保袋</strong></div></li>
+      </ul>
+      <div class="sdiv">💙 洗滌組（項次 1–5）</div>
+      <ul class="cl" data-sec="s9">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>尋找發心清洗的志工</div></li>
+        <li class="ci" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>裝入<strong>藍色環保袋</strong></div></li>
+        <li class="ci" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>於「領隊團收執聯」填寫清洗人<strong>姓名與電話</strong></div></li>
+      </ul>
+      <div class="sdiv">歸還表單</div>
+      <ul class="cl" data-sec="s9">
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rA">副A</span>摺疊背心，確認「普高 Logo」朝上</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>填寫物料歸還小單（物件、數量、車次）</div></li>
+        <li class="ci hi" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rL">領隊</span>由照客簽收</div></li>
+        <li class="ci" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rX">全體</span>進行活動檢討與回饋</div></li>
+        <li class="ci" onclick="tap(this)"><div class="cb"></div><div class="ct"><span class="rb rX">三人</span>禮佛告假</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /cards -->
+
+<!-- ════ 最後核對 ════ -->
+<div class="final-card">
+  <div class="final-hd">
+    <div class="final-title">✅ 物料歸還前 — 五項自我核對</div>
+  </div>
+  <div class="final-body">
+    <ul class="fcl">
+      <li class="fi" onclick="tapF(this)"><div class="fcb"></div><span class="ft">項次 6–14 已確實酒精消毒？→ 裝入粉紅袋</span></li>
+      <li class="fi" onclick="tapF(this)"><div class="fcb"></div><span class="ft">項次 1–5 已發心清洗？→ 裝入藍色袋</span></li>
+      <li class="fi" onclick="tapF(this)"><div class="fcb"></div><span class="ft">領隊單已填寫清洗人姓名／電話？</span></li>
+      <li class="fi" onclick="tapF(this)"><div class="fcb"></div><span class="ft">背心摺疊已確保普高 Logo 朝上疊放？</span></li>
+      <li class="fi" onclick="tapF(this)"><div class="fcb"></div><span class="ft">歸還單已填寫數量並由照客簽名？</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="legend">
+  <span>🟥 高重要 &nbsp;🟨 一般</span>
+  <span>🟨領隊 &nbsp;🟦副A-物 &nbsp;🟥副B-人</span>
+  <span>📌書籤 ☑勾選完成</span>
+</div>
+
+</div><!-- /wrap -->
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到頂端">↑</button>
+
+<script>
+const KEY = 'vg_v10';
+let st = {};
+function load(){ try{ const s=localStorage.getItem(KEY); if(s) st=JSON.parse(s); }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+
+function toggleCard(id, e){
+  if(e && e.target && e.target.closest('.pin-btn')) return;
+  const card = document.getElementById(id);
+  const wasOpen = card.classList.contains('open');
+  card.classList.toggle('open', !wasOpen);
+  if(!st.open) st.open={};
+  st.open[id] = !wasOpen;
+  save();
+}
+
+function tap(li){
+  li.classList.toggle('ck');
+  st.items = Array.from(document.querySelectorAll('.ci')).map(i=>i.classList.contains('ck'));
+  save(); updateDone();
+}
+function tapF(li){
+  li.classList.toggle('ck');
+  st.finals = Array.from(document.querySelectorAll('.fi')).map(f=>f.classList.contains('ck'));
+  save();
+}
+
+const META = {
+  s3:{n:'3',ic:'🚌',t:'發車前三項必確認',   d:'5/23 15:00'},
+  s4:{n:'4',ic:'🎙️',t:'發車後車上依序執行', d:'發車後'},
+  s5:{n:'5',ic:'🛣️',t:'行車・休息站・宣達', d:'行車途中'},
+  s6:{n:'6',ic:'🏯',t:'抵達中台・集結回程', d:'5/24 14:30'},
+  s7:{n:'7',ic:'🏠',t:'回程途中職責',        d:'回程'},
+  s8:{n:'8',ic:'⛩️',t:'抵達精舍後續作業',   d:'返抵精舍'},
+  s9:{n:'9',ic:'📋',t:'物料歸還清消洗滌',   d:'最後任務'},
+};
+
+function renderPins(){
+  const bar=document.getElementById('pjb');
+  const list=document.getElementById('pjbList');
+  const pins=Object.entries(st.pins||{}).filter(([,v])=>v).map(([k])=>k)
+             .sort((a,b)=>+a.slice(1)-+b.slice(1));
+  list.innerHTML='';
+  if(!pins.length){ bar.classList.remove('on'); return; }
+  bar.classList.add('on');
+  pins.forEach(id=>{
+    const m=META[id]; if(!m) return;
+    const li=document.createElement('li');
+    li.className='pjb-row';
+    li.innerHTML=`<div class="pjb-n">${m.n}</div><span class="pjb-txt">${m.ic} ${m.t}</span><span class="pjb-dt">${m.d}</span>`;
+    li.onclick=()=>{
+      const card=document.getElementById(id);
+      if(!card.classList.contains('open')){ card.classList.add('open'); if(!st.open)st.open={}; st.open[id]=true; save(); }
+      setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'start'}),50);
+    };
+    list.appendChild(li);
+  });
+}
+
+function tapPin(e,id){
+  e.stopPropagation();
+  const btn=document.getElementById('pin-'+id);
+  const on=btn.classList.toggle('on');
+  btn.querySelector('.pin-icon').textContent=on?'📍':'📌';
+  btn.querySelector('.pin-lbl').textContent=on?'已釘':'書籤';
+  if(!st.pins) st.pins={};
+  st.pins[id]=on; save(); renderPins();
+}
+
+function updateDone(){
+  document.querySelectorAll('.card[id]').forEach(card=>{
+    const items=card.querySelectorAll('.ci');
+    if(!items.length) return;
+    const allDone=Array.from(items).every(i=>i.classList.contains('ck'));
+    card.classList.toggle('all-done',allDone);
+  });
+}
+
+
+function resetAll(){
+  if(!confirm('確定重置所有勾選進度？')) return;
+  st={}; save();
+  document.querySelectorAll('.ci,.fi').forEach(i=>i.classList.remove('ck'));
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('all-done','open'));
+  document.querySelectorAll('.pin-btn').forEach(b=>{
+    b.classList.remove('on');
+    b.querySelector('.pin-icon').textContent='📌';
+    b.querySelector('.pin-lbl').textContent='書籤';
+  });
+  renderPins();
+}
+
+const bt=document.getElementById('backTop');
+window.addEventListener('scroll',()=>bt.classList.toggle('on',scrollY>300),{passive:true});
+
+load();
+const allCi=document.querySelectorAll('.ci');
+(st.items||[]).forEach((ck,i)=>{ if(ck&&allCi[i]) allCi[i].classList.add('ck'); });
+const allFi=document.querySelectorAll('.fi');
+(st.finals||[]).forEach((ck,i)=>{ if(ck&&allFi[i]) allFi[i].classList.add('ck'); });
+Object.entries(st.pins||{}).forEach(([id,on])=>{
+  if(!on) return;
+  const b=document.getElementById('pin-'+id);
+  if(b){ b.classList.add('on'); b.querySelector('.pin-icon').textContent='📍'; b.querySelector('.pin-lbl').textContent='已釘'; }
+});
+// always open all cards
+document.querySelectorAll('.card[id]').forEach(card => {
+  card.classList.add('open');
+});
+updateDone(); renderPins();
+</script>
+</body>
+</html>
